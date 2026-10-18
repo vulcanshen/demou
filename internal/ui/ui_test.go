@@ -152,7 +152,8 @@ func TestMoveOpenAnAuthor(t *testing.T) {
 	hs.contains("AUTHOR — Jane Austen", "Jane Austen, 1775–1817.", "Pride and Prejudice", "Emma")
 }
 
-// A first page folds between words, never inside one (TODO(tdp DM2)).
+// A first page folds between words, never inside one (tdp components,
+// "Wrapping"; TODO(lib DM2)).
 func TestFirstPageFoldsBetweenWords(t *testing.T) {
 	t.Parallel()
 	hs := newHarness(t, 80, 40)

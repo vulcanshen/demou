@@ -1,6 +1,6 @@
 # demou 開發者備忘
 
-demou 是家族的操作教學 app，遵循 [terminu design](https://github.com/vulcanshen/terminu) principle（tdp v0.7.0），
+demou 是家族的操作教學 app，遵循 [terminu design](https://github.com/vulcanshen/terminu) principle（tdp v0.7.2），
 畫面用 [terminu-go](https://github.com/vulcanshen/terminu-go)。
 
 ## 運作方式
@@ -8,7 +8,8 @@ demou 是家族的操作教學 app，遵循 [terminu design](https://github.com/
 - `cmd/demou/main.go` 先看命令列：`version`、`help`（Rules E1）；沒有參數時開 `internal/ui` 做好的 terminu-go `App`。
 - `internal/ui`：三個畫面（`move.go`、`actions.go`、`popups.go`）看的是同一個書架（`books.go`）。書架只在記憶體裡：書搬了、
   拿掉了、加了，`refresh` 把三個畫面的清單一起重畫。什麼都不存，每次啟動都是同一份。
-- splash 畫 `internal/ui/icon.svg`，它是 `docs/icon.svg` 的副本（`go:embed` 讀不到上層，見 DM1），測試守住兩份一樣。
+- splash 畫 `internal/ui/icon.svg`，它是 `docs/icon.svg`（正本）的副本：`go:embed` 讀不到 `docs/`，測試守住兩份一樣
+  （Rules E6、project 的「目錄」）。換 mark 時兩份一起換。
 - 版本在 `internal/version`（tdp project 的範本）：本機 build 是 `dev`，goreleaser 發版時注入 tag 去掉 v 的版號。
 
 ## 設計決定
@@ -54,11 +55,13 @@ demou 是家族的操作教學 app，遵循 [terminu design](https://github.com/
 
 ## 已知的牆與未做
 
-- 還沒符合 tdp 的地方逐條寫在 [`demou-terminu-fix.md`](demou-terminu-fix.md)。
-- 規範的盲點與 lib 要補的記在 terminu 的紀錄（`terminu 的筆記`），編號 DM：
-  - DM1：`docs/icon.svg` 怎麼 embed。暫時在 `internal/ui/` 放一份副本，測試守住兩份一樣（`TODO(tdp DM1)`）。
-  - DM2：viewer 在字的中間折行。暫時打開第一頁時先用 `terminu.Wrap` 照字詞折成最寬 60 格的幾行（`TODO(tdp DM2)`）。
-  - DM3：select 要捲動時，寬度沒算進捲動位置，`Esc:cancel` 被捨掉（80×24 打開 Author 就會）。demou 不改；80×40 與影片的尺寸不受影響。
+- 沒有尚未符合 tdp 的地方，所以沒有 `docs/demou-terminu-fix.md`（Rules E7：全部修完就刪掉）。
+- 規範的盲點與 lib 要補的記在 terminu 的紀錄（`terminu 的筆記`），編號 DM。tdp v0.7.1 都定了：
+  - DM1：`docs/icon.svg` 怎麼 embed。規範照 demou 的做法寫進 Rules E6 與 project 的「目錄」（見上面的「運作方式」）。
+  - DM2：viewer 在字的中間折行。規範定了（components 的「折行」：在空白處斷），lib 還沒跟上：打開第一頁時先用 `terminu.Wrap`
+    折成最寬 60 格的幾行（`TODO(lib DM2)`）。lib 跟上之後拿掉，第一頁回到一行一段。
+  - DM3：select 要捲動時，寬度沒算進捲動位置，`Esc:cancel` 被捨掉（80×24 打開 Author 就會）。terminu-go 已經修好、還沒打 tag；
+    demou 不用改程式，打了 tag 之後 `go.mod` 跟上。
 
 ## 偏離 tdp
 
@@ -66,11 +69,13 @@ demou 是家族的操作教學 app，遵循 [terminu design](https://github.com/
 
 ## 設計文件導讀
 
-- [`demou-terminu-fix.md`](demou-terminu-fix.md)：還沒符合 tdp 的地方。
+沒有另外的設計文件：畫面與決定都寫在這一份。
 
 ## 建置與開發
 
 - `make`（或 `make help`）列出所有指令；家族共用的 target 在 `family.mk`，app 自己的放在 `Makefile` 的最後一段。
+- project 目錄圖以外的頂層檔案只有 `CLAUDE.md`：給 AI 協作的說明（demou 是什麼、規範在哪、盲點怎麼記、跟 user 合作的方式），
+  由 terminu 的 session 寫。
 - 本機用 `go.work` 指著 `../terminu-go`（git 不收）。`make check` 有 `go.work` 時會再關掉它、照 `go.mod` 的版本跑一次
   （`check-lib`）：過不了，就是用到了 lib 還沒發版的東西。
 - **測試**（`internal/ui`）：`harness_test.go` 不開終端機跑 demou，送按鍵、跑完動畫、把畫面當文字讀出來（照 kamonu 的 harness）。

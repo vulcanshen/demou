@@ -16,8 +16,7 @@ import (
 
 // icon is demou's family mark (tdp S5), drawn by the splash: a copy of
 // docs/icon.svg, which go:embed can't reach from here (a test holds the two
-// the same).
-// TODO(tdp DM1): where the embedded copy lives.
+// the same, tdp E6).
 //
 //go:embed icon.svg
 var icon []byte
@@ -109,8 +108,9 @@ func (d *demou) add(title, author string) string {
 }
 
 // pageWidth is how wide the lines of a first page are.
-// TODO(tdp DM2): the viewer folds a line inside a word; until it may fold
-// between words, the page comes folded already.
+// TODO(lib DM2): text folds at spaces (tdp components, "Wrapping"), but the
+// viewer still folds inside a word; until it follows, the page comes folded
+// already.
 const pageWidth = 60
 
 // openBook is Enter on a book, the same on every screen (tdp K3): its first
