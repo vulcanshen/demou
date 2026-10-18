@@ -5,11 +5,11 @@ demou 是家族的操作教學 app，遵循 [terminu design](https://github.com/
 
 ## 運作方式
 
-- `cmd/demou/main.go` 先看命令列：`version`、`help`（Rules E1）；沒有參數時開 `internal/ui` 做好的 terminu-go `App`。
+- `cmd/demou/main.go` 先看命令列：`version`、`help`（tdp E1）；沒有參數時開 `internal/ui` 做好的 terminu-go `App`。
 - `internal/ui`：三個畫面（`move.go`、`actions.go`、`popups.go`）看的是同一個書架（`books.go`）。書架只在記憶體裡：書搬了、
   拿掉了、加了，`refresh` 把三個畫面的清單一起重畫。什麼都不存，每次啟動都是同一份。
 - splash 畫 `internal/ui/icon.svg`，它是 `docs/icon.svg`（正本）的副本：`go:embed` 讀不到 `docs/`，測試守住兩份一樣
-  （Rules E6、project 的「目錄」）。換 mark 時兩份一起換。
+  （tdp E6、project 的「目錄」）。換 mark 時兩份一起換。
 - 版本在 `internal/version`（tdp project 的範本）：本機 build 是 `dev`，goreleaser 發版時注入 tag 去掉 v 的版號。
 
 ## 設計決定
@@ -23,7 +23,7 @@ demou 是家族的操作教學 app，遵循 [terminu design](https://github.com/
   畫面一致。沒有隨機的東西，每次啟動都一樣，錄出來才一樣。
 - **每章一個畫面**，用畫面 chip 列換：`[M]ove`、`[A]ctions`、`[P]opups`。
   1. **MOVE（看與移動）**：`[1] SHELVES` 是三個書架；`[2] BOOKS` 是 cursor 那個書架上的書，跟著 cursor 即時換，另有 `AUTHORS` tab。
-     兩個 panel 都有 cursor，都示範得到繞回。`[1]` 的 `Enter` 把 focus 送到 `[2]`（Rules K3 的明細）。
+     兩個 panel 都有 cursor，都示範得到繞回。`[1]` 的 `Enter` 把 focus 送到 `[2]`（tdp K3 的明細）。
   2. **ACTIONS（找動作）**：一個 panel 列出全部的書。item 區 `[Enter] Open`、`[b]egin`（移到 Reading，只有 To read 的書能用）、
      `[f]inish`（移到 Done，只有 Reading 的書能用），其他書上是停用色，cursor 一移就看得到變化；panel 區 `[s]ort`（按年份，再按一次
      回到按書名）。
@@ -31,10 +31,10 @@ demou 是家族的操作教學 app，遵循 [terminu design](https://github.com/
      作者：dialog/form 規定超過五個選項用 select），兩欄都必填，Add 之後書放進 To read、cursor 停在新書上。「疊兩層」就是表單上的
      select。
 - **三個畫面共用一個書架**：在 ACTIONS 搬的書，回到 MOVE 書架上的數字跟著變。
-- **書的 `Enter` 在每個畫面都是 Open**，打開第一頁（Rules K3：同一種項目在同一個 app 裡永遠是同一個動作）。AUTHORS tab 上的是作者，
-  不是書：`Enter` 打開作者的生卒年與書。在 demou 裡加的書沒有第一頁，Open 是停用色（Rules M6）。
+- **書的 `Enter` 在每個畫面都是 Open**，打開第一頁（tdp K3：同一種項目在同一個 app 裡永遠是同一個動作）。AUTHORS tab 上的是作者，
+  不是書：`Enter` 打開作者的生卒年與書。在 demou 裡加的書沒有第一頁，Open 是停用色（tdp M6）。
 - **Remove 的問句帶書名**：`Action.Ask` 是登記時給的，問句卻要跟著 cursor 換。做法是 Ask 用一個指標，cursor 換書時（`List.OnMove`）
-  改它的 `Question`。不在 `Do` 裡自己開 confirm：那樣從 Space menu 執行時 menu 會先關掉，`Esc` 回不到 menu（Rules F4）；而 demou
+  改它的 `Question`。不在 `Do` 裡自己開 confirm：那樣從 Space menu 執行時 menu 會先關掉，`Esc` 回不到 menu（tdp F4）；而 demou
   教的正是「`Esc` 一次關一層」。
 - **`q` 先問**：`Quit demou?`，每個畫面都一樣。
 - **家族 mark**：user 用 kamonu 畫的，U 框裡上面 D、E，下面 M、O；`docs/icon.svg` 是 kamonu 匯出的檔，分字註解照 S5（U D E M O）。
@@ -55,9 +55,9 @@ demou 是家族的操作教學 app，遵循 [terminu design](https://github.com/
 
 ## 已知的牆與未做
 
-- 沒有尚未符合 tdp 的地方，所以沒有 `docs/demou-terminu-fix.md`（Rules E7：全部修完就刪掉）。
+- 沒有尚未符合 tdp 的地方，所以沒有 `docs/demou-terminu-fix.md`（tdp E7：全部修完就刪掉）。
 - 規範的盲點與 lib 要補的記在 terminu 的紀錄（`terminu 的筆記`），編號 DM。tdp v0.7.1 都定了：
-  - DM1：`docs/icon.svg` 怎麼 embed。規範照 demou 的做法寫進 Rules E6 與 project 的「目錄」（見上面的「運作方式」）。
+  - DM1：`docs/icon.svg` 怎麼 embed。規範照 demou 的做法寫進 tdp E6 與 project 的「目錄」（見上面的「運作方式」）。
   - DM2：viewer 在字的中間折行。規範定了（components 的「折行」：在空白處斷），terminu-go v0.1.13 跟上了；demou 原本先用
     `terminu.Wrap` 把第一頁折成最寬 60 格的幾行，現在拿掉，第一頁是一行一段，由 viewer 照 popup 的寬度折。
   - DM3：select 要捲動時，寬度沒算進捲動位置，`Esc:cancel` 被捨掉（80×24 打開 Author 就會）。terminu-go v0.1.13 修好了，
@@ -80,7 +80,7 @@ demou 是家族的操作教學 app，遵循 [terminu design](https://github.com/
   （`check-lib`）：過不了，就是用到了 lib 還沒發版的東西。
 - **測試**（`internal/ui`）：`harness_test.go` 不開終端機跑 demou，送按鍵、跑完動畫、把畫面當文字讀出來（照 kamonu 的 harness）。
   - L4 的畫面測試：5 種尺寸 × 每個畫面與每一種 popup，再加「打開之後把終端機縮小」，讓 popup 比畫面寬、比畫面高、兩邊都大
-    （Rules E5）；icon 與 powerline 符號一格、icon 兩格、兩種都兩格各跑一輪。
+    （tdp E5）；icon 與 powerline 符號一格、icon 兩格、兩種都兩格各跑一輪。
   - 動畫在測試裡也是真的時間（一個 popup 288ms，lib 沒有關掉的開關），所以畫面測試平行跑；一輪 `go test` 約 40 秒。icon 寬度是
     lib 的全域設定，只在兩輪之間、沒有測試在跑時改。
 - **錄影**：

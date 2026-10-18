@@ -81,7 +81,7 @@ func TestL4EveryLineIsTheTerminalsWidth(t *testing.T) {
 }
 
 // TestE5PopupBiggerThanTheScreen is tdp E5: a popup keeps the size it opened
-// with (Rules F7), so shrinking the terminal leaves it wider than the
+// with (tdp F7), so shrinking the terminal leaves it wider than the
 // screen, taller, or both; every line still fits.
 func TestE5PopupBiggerThanTheScreen(t *testing.T) {
 	var cases []sized
@@ -331,7 +331,7 @@ func TestEnterOpensTheFirstPageEverywhere(t *testing.T) {
 }
 
 // TestSplashIsDocsIcon is tdp E6: the splash draws docs/icon.svg, demou's
-// mark as S5 has it, the U frame and then D, E, M, O.
+// mark as tdp S5 has it, the U frame and then D, E, M, O.
 func TestSplashIsDocsIcon(t *testing.T) {
 	t.Parallel()
 	want, err := os.ReadFile("../../docs/icon.svg")
