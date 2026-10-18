@@ -1,6 +1,6 @@
 # demou 開發者備忘
 
-demou 是家族的操作教學 app，遵循 [terminu design](https://github.com/vulcanshen/terminu) principle（tdp v0.7.2），
+demou 是家族的操作教學 app，遵循 [terminu design](https://github.com/vulcanshen/terminu) principle（tdp v0.7.4），
 畫面用 [terminu-go](https://github.com/vulcanshen/terminu-go)。
 
 ## 運作方式
@@ -58,10 +58,10 @@ demou 是家族的操作教學 app，遵循 [terminu design](https://github.com/
 - 沒有尚未符合 tdp 的地方，所以沒有 `docs/demou-terminu-fix.md`（Rules E7：全部修完就刪掉）。
 - 規範的盲點與 lib 要補的記在 terminu 的紀錄（`terminu 的筆記`），編號 DM。tdp v0.7.1 都定了：
   - DM1：`docs/icon.svg` 怎麼 embed。規範照 demou 的做法寫進 Rules E6 與 project 的「目錄」（見上面的「運作方式」）。
-  - DM2：viewer 在字的中間折行。規範定了（components 的「折行」：在空白處斷），lib 還沒跟上：打開第一頁時先用 `terminu.Wrap`
-    折成最寬 60 格的幾行（`TODO(lib DM2)`）。lib 跟上之後拿掉，第一頁回到一行一段。
-  - DM3：select 要捲動時，寬度沒算進捲動位置，`Esc:cancel` 被捨掉（80×24 打開 Author 就會）。terminu-go 已經修好、還沒打 tag；
-    demou 不用改程式，打了 tag 之後 `go.mod` 跟上。
+  - DM2：viewer 在字的中間折行。規範定了（components 的「折行」：在空白處斷），terminu-go v0.1.13 跟上了；demou 原本先用
+    `terminu.Wrap` 把第一頁折成最寬 60 格的幾行，現在拿掉，第一頁是一行一段，由 viewer 照 popup 的寬度折。
+  - DM3：select 要捲動時，寬度沒算進捲動位置，`Esc:cancel` 被捨掉（80×24 打開 Author 就會）。terminu-go v0.1.13 修好了，
+    demou 不用改程式。
 
 ## 偏離 tdp
 

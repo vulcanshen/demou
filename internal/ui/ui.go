@@ -107,12 +107,6 @@ func (d *demou) add(title, author string) string {
 	return b.id
 }
 
-// pageWidth is how wide the lines of a first page are.
-// TODO(lib DM2): text folds at spaces (tdp components, "Wrapping"), but the
-// viewer still folds inside a word; until it follows, the page comes folded
-// already.
-const pageWidth = 60
-
 // openBook is Enter on a book, the same on every screen (tdp K3): its first
 // page. A book added in demou has none.
 func (d *demou) openBook(l *terminu.List) terminu.Action {
@@ -121,6 +115,6 @@ func (d *demou) openBook(l *terminu.List) terminu.Action {
 		Do: func() tea.Cmd {
 			b := d.current(l)
 			return d.a.Viewer(&terminu.Viewer{Title: "First page", Subject: b.title, Glyph: glyphBook,
-				Lines: terminu.Wrap(b.firstPage, pageWidth)})
+				Lines: []string{b.firstPage}})
 		}}
 }

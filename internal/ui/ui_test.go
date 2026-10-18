@@ -153,7 +153,7 @@ func TestMoveOpenAnAuthor(t *testing.T) {
 }
 
 // A first page folds between words, never inside one (tdp components,
-// "Wrapping"; TODO(lib DM2)).
+// "Wrapping").
 func TestFirstPageFoldsBetweenWords(t *testing.T) {
 	t.Parallel()
 	hs := newHarness(t, 80, 40)
