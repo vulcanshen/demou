@@ -9,4 +9,4 @@ Each release names the version of terminu design (tdp) it follows.
 - Three screens over one bookshelf of twenty classics: `[M]ove` (shelves and their books, with an Authors tab), `[A]ctions`
   (open, begin, finish, sort) and `[P]opups` (remove, after asking; the NEW BOOK form with a select over it); `q` asks
   first
-- demou's mark, `docs/icon.svg`, and its splash
+- demou's mark, `docs/icon.svg`
