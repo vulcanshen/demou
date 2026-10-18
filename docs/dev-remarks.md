@@ -5,21 +5,60 @@ demou 是家族的操作教學 app，遵循 [terminu design](https://github.com/
 
 ## 運作方式
 
-- `cmd/demou/main.go` 先看命令列：`version`、`help`（Rules E1）；沒有參數時開 terminu-go 的 `App`。
+- `cmd/demou/main.go` 先看命令列：`version`、`help`（Rules E1）；沒有參數時開 `internal/ui` 做好的 terminu-go `App`。
+- `internal/ui`：三個畫面（`move.go`、`actions.go`、`popups.go`）看的是同一個書架（`books.go`）。書架只在記憶體裡：書搬了、
+  拿掉了、加了，`refresh` 把三個畫面的清單一起重畫。什麼都不存，每次啟動都是同一份。
+- splash 畫 `internal/ui/icon.svg`，它是 `docs/icon.svg` 的副本（`go:embed` 讀不到上層，見 DM1），測試守住兩份一樣。
 - 版本在 `internal/version`（tdp project 的範本）：本機 build 是 `dev`，goreleaser 發版時注入 tag 去掉 v 的版號。
 
 ## 設計決定
 
-- **repo 照 tdp v0.7.0 的 project 從零建**：demou 是 project 的參考實作。範本檔（`family.mk`、`release.yml`、
-  `.goreleaser.yaml`、`install.sh`、`uninstall.sh`、`internal/version/version.go`、`.gitignore`）照原樣複製，只改 project
-  「範本檔」表最後一欄的地方；用起來的問題回報成 tdp 的缺漏，不在這裡改範本。
+2026-10-18 跟 user 一題一題定的：
+
+- **為什麼有 demou**：user 的 YouTube 影片每個成員分三段：成員自己的功能 → 家族共用基礎操作 → 成員功能細節。中間那段用 demou
+  錄一次，每支影片剪同一段進去；看完影片的人也可以裝來自己按一遍。
+- **假資料是一個書架**：20 本公版經典（作者都過世很久，沒有版權問題）、三個書架（To read 7、Reading 3、Done 10）、18 位作者。
+  要中性，放進每個成員的影片都合適，也不能像任何一個成員的領域（檔案像 filu、host 像 sshu、pod 像 kbu）。內容用英文，跟家族的
+  畫面一致。沒有隨機的東西，每次啟動都一樣，錄出來才一樣。
+- **每章一個畫面**，用畫面 chip 列換：`[M]ove`、`[A]ctions`、`[P]opups`。
+  1. **MOVE（看與移動）**：`[1] SHELVES` 是三個書架；`[2] BOOKS` 是 cursor 那個書架上的書，跟著 cursor 即時換，另有 `AUTHORS` tab。
+     兩個 panel 都有 cursor，都示範得到繞回。`[1]` 的 `Enter` 把 focus 送到 `[2]`（Rules K3 的明細）。
+  2. **ACTIONS（找動作）**：一個 panel 列出全部的書。item 區 `[Enter] Open`、`[b]egin`（移到 Reading，只有 To read 的書能用）、
+     `[f]inish`（移到 Done，只有 Reading 的書能用），其他書上是停用色，cursor 一移就看得到變化；panel 區 `[s]ort`（按年份，再按一次
+     回到按書名）。
+  3. **POPUPS（popup）**：`[r]emove` 先問（confirm 寫出書名）；`[n]ew book` 開 NEW BOOK 表單，Title 是文字、Author 是 select（18 位
+     作者：dialog/form 規定超過五個選項用 select），兩欄都必填，Add 之後書放進 To read、cursor 停在新書上。「疊兩層」就是表單上的
+     select。
+- **三個畫面共用一個書架**：在 ACTIONS 搬的書，回到 MOVE 書架上的數字跟著變。
+- **書的 `Enter` 在每個畫面都是 Open**，打開第一頁（Rules K3：同一種項目在同一個 app 裡永遠是同一個動作）。AUTHORS tab 上的是作者，
+  不是書：`Enter` 打開作者的生卒年與書。在 demou 裡加的書沒有第一頁，Open 是停用色（Rules M6）。
+- **Remove 的問句帶書名**：`Action.Ask` 是登記時給的，問句卻要跟著 cursor 換。做法是 Ask 用一個指標，cursor 換書時（`List.OnMove`）
+  改它的 `Question`。不在 `Do` 裡自己開 confirm：那樣從 Space menu 執行時 menu 會先關掉，`Esc` 回不到 menu（Rules F4）；而 demou
+  教的正是「`Esc` 一次關一層」。
+- **`q` 先問**：`Quit demou?`，每個畫面都一樣。
+- **家族 mark**：user 用 kamonu 畫的，U 框裡上面 D、E，下面 M、O；`docs/icon.svg` 是 kamonu 匯出的檔，分字註解照 S5（U D E M O）。
+- **錄法**：YouTube 的影片用 vulaude 的 tape-video，一個畫面一章（三章），字幕寫在 tape 裡、錄的時候就畫在下方；尺寸與配色照 ccdrawu 的
+  `_common.tape`（1920×960，字 18），剪進成員的影片時才一致。README 的 gif 照 E6 用 VHS 錄（`make gif`）。user 原本選「VHS 錄、剪輯時
+  加字幕」，看到 ccdrawu 已經用 tape-video 錄好 YouTube 之後改用它。
 - **License 是 GPL-3.0**：terminu-go 是 GPL-3.0。
 
 ## 已否決，不要重提
 
+- 假資料用太陽系（只有 8 列，示範不到捲動；「新增行星」的表單不自然）或購物清單（內容單薄）。
+- MOVE 用「左邊是書、右邊是第一頁」：右邊沒有 cursor，示範不到在第二個 panel 裡繞回。
+- ACTIONS 用兩個 panel：看得到 Space menu 跟著 focus 換，但書架那個 panel 也要有自己的動作，畫面上的東西變多。
+- NEW BOOK 表單多一欄 Shelf（radio）：超出已定的「一個文字、一個 select」，影片要多講一種操作。
+- 影片只有一章「terminu basics」：觀眾不能直接跳到中間某一段。
+- 手動錄影：tdp 改了就要整段重按，每次都不一樣。
+- demou 自己在畫面上顯示剛按的鍵：家族 app 沒有這個東西，而且 terminu-go 的按鍵不會傳給 app。
+
 ## 已知的牆與未做
 
 - 還沒符合 tdp 的地方逐條寫在 [`demou-terminu-fix.md`](demou-terminu-fix.md)。
+- 規範的盲點與 lib 要補的記在 terminu 的紀錄（`terminu 的筆記`），編號 DM：
+  - DM1：`docs/icon.svg` 怎麼 embed。暫時在 `internal/ui/` 放一份副本，測試守住兩份一樣（`TODO(tdp DM1)`）。
+  - DM2：viewer 在字的中間折行。暫時打開第一頁時先用 `terminu.Wrap` 照字詞折成最寬 60 格的幾行（`TODO(tdp DM2)`）。
+  - DM3：select 要捲動時，寬度沒算進捲動位置，`Esc:cancel` 被捨掉（80×24 打開 Author 就會）。demou 不改；80×40 與影片的尺寸不受影響。
 
 ## 偏離 tdp
 
@@ -34,6 +73,17 @@ demou 是家族的操作教學 app，遵循 [terminu design](https://github.com/
 - `make`（或 `make help`）列出所有指令；家族共用的 target 在 `family.mk`，app 自己的放在 `Makefile` 的最後一段。
 - 本機用 `go.work` 指著 `../terminu-go`（git 不收）。`make check` 有 `go.work` 時會再關掉它、照 `go.mod` 的版本跑一次
   （`check-lib`）：過不了，就是用到了 lib 還沒發版的東西。
+- **測試**（`internal/ui`）：`harness_test.go` 不開終端機跑 demou，送按鍵、跑完動畫、把畫面當文字讀出來（照 kamonu 的 harness）。
+  - L4 的畫面測試：5 種尺寸 × 每個畫面與每一種 popup，再加「打開之後把終端機縮小」，讓 popup 比畫面寬、比畫面高、兩邊都大
+    （Rules E5）；icon 與 powerline 符號一格、icon 兩格、兩種都兩格各跑一輪。
+  - 動畫在測試裡也是真的時間（一個 popup 288ms，lib 沒有關掉的開關），所以畫面測試平行跑；一輪 `go test` 約 40 秒。icon 寬度是
+    lib 的全域設定，只在兩輪之間、沒有測試在跑時改。
+- **錄影**：
+  - README 的 gif：`make gif`（`.local/demos/demo.tape` → `docs/demo.gif`）。
+  - YouTube 的影片：`node tape-video.mjs .local/demos/youtube [章號…]`，
+    在 repo 根目錄跑。三個 tape（`01-move`、`02-actions`、`03-popups`）各自先 `make build`，在 tape-video 的 tmux 裡開 demou；給了章號就只
+    重錄那幾章。成品在 `.local/demos/youtube/out/`（`video.mp4`、`chapters.txt`、`sheet.png`）。
+  - 字幕寫成 `# caption: …`，接著 `Ctrl+B`、`Type "]"` 切換；`[鍵]` 畫成鍵帽，所以字幕裡不是鍵的字不能加方括號。
 
 ## 發布
 

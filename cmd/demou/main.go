@@ -5,8 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	terminu "github.com/vulcanshen/terminu-go"
-
+	"github.com/vulcanshen/demou/internal/ui"
 	"github.com/vulcanshen/demou/internal/version"
 )
 
@@ -32,11 +31,7 @@ func main() {
 			os.Exit(2)
 		}
 	}
-	app := terminu.New("demou")
-	// A placeholder so the app runs; the real screens replace it.
-	start := &terminu.List{Columns: []terminu.Column{{Title: "Start", Flex: true}}, EmptyFact: "Nothing here yet"}
-	app.AddScreen(&terminu.Screen{Name: "Start", Panels: []*terminu.Panel{{Label: "Start", Body: start}}})
-	if err := app.Run(); err != nil {
+	if err := ui.New().Run(); err != nil {
 		fmt.Fprintln(os.Stderr, "demou:", err)
 		os.Exit(1)
 	}

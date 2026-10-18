@@ -7,13 +7,20 @@
 
 **The terminu family's app for learning the operations, hands-on.**
 
-<!-- What it does, in one paragraph. -->
+Every app in the terminu family works the same way: the same keys move you around, find what you can do and close what
+you opened. demou is a bookshelf to practise them on, one screen for each part: looking around and moving, finding what
+you can do, and popups over popups. It is the app in the family's videos; install it and press along. Nothing is saved:
+every start is the same shelf of twenty classics.
 
-<!-- One demo gif, recorded with VHS from .local/demos/demo.tape. -->
+![demou: moving between shelves and panels, the Space menu, and adding a book with the NEW BOOK form](docs/demo.gif)
 
 ## Features
 
-<!-- What the user gets, not how it is done. -->
+- **Three screens, one lesson each**: `[M]ove` to look around and move, `[A]ctions` to find what you can do, `[P]opups` for
+  popups over popups.
+- **What you learn works in every family app**: the same `Space`, `?`, `Tab`, `Enter` and `Esc` in kbu, filu, sshu and the
+  rest.
+- **Safe to press anything**: the books are made up for practice and live only while demou runs; it never touches your files.
 
 ## Install
 
@@ -54,7 +61,10 @@ No sudo: it installs to `~/.local/bin`.
 go install github.com/vulcanshen/demou/cmd/demou@latest
 ```
 
-<!-- What happens the first time demou starts. -->
+### The first start
+
+demou opens on the `[M]ove` screen with the bookshelf. It writes nothing anywhere: quit and start again, and the shelf is
+back as it was.
 
 ### Uninstall
 
@@ -70,7 +80,11 @@ curl -fsSL https://raw.githubusercontent.com/vulcanshen/demou/main/uninstall.sh 
 
 ## Quick start
 
-<!-- The first few steps. -->
+1. Run `demou`.
+2. Press `j` and `k` to go through the shelves, `Tab` to go over to the books.
+3. Press `Space` to see what you can do here, `?` to see every key that works here.
+4. Press `A` and `P` for the other two screens, `M` to come back.
+5. Press `q` to quit; demou asks first.
 
 ## Usage
 
@@ -80,15 +94,38 @@ demou version    print the version (-v, --version)
 demou help       print the command-line usage (-h, --help)
 ```
 
-<!-- The keys. -->
+The keys every family app shares:
+
+| Key | What it does |
+|---|---|
+| `Space` | What you can do here: on this item, on this panel, and for the whole app |
+| `?` | Every key that works here |
+| `Tab`, `1`–`9` | The next panel; jump to a panel by its number |
+| `j\|k`, `h\|l` | Move; `h\|l` switch tabs; past the last one you are back at the first |
+| `gg`, `G` | To the top, to the bottom |
+| `Enter` | The obvious thing: here, open the book at its first page |
+| `Esc` | Close the popup on top, one at a time; it never leaves demou |
+| `q` | Quit, after asking |
+
+demou's own:
+
+| Key | Where | What it does |
+|---|---|---|
+| `M`, `A`, `P` | everywhere | The `[M]ove`, `[A]ctions` and `[P]opups` screens |
+| `b`, `f` | `[A]ctions` | Begin the book (to Reading), finish it (to Done) |
+| `s` | `[A]ctions` | Sort by year, or by title again |
+| `r` | `[P]opups` | Remove the book, after asking |
+| `n` | `[P]opups` | A new book: the NEW BOOK form |
 
 ## Settings and data
 
-<!-- Where demou keeps its settings and data, and the family setting keys it uses. -->
+demou keeps no settings and no data: the books live in memory, and what you change is gone when it quits. It uses none of
+the family's shared setting keys.
 
 ## Limits
 
-<!-- In the user's words. -->
+- The bookshelf is for practice: what you add, move or remove is gone when demou quits.
+- macOS and Linux only (WSL too); there is no Windows build.
 
 ## Links
 
