@@ -1,7 +1,7 @@
 # demou 開發者備忘
 
-demou 是家族的操作教學 app，遵循 [terminu design](https://github.com/vulcanshen/terminu) principle（tdp v0.8.2），
-畫面用 [terminu-go](https://github.com/vulcanshen/terminu-go)（v0.2.1）。
+demou 是家族的操作教學 app，遵循 [terminu design](https://github.com/vulcanshen/terminu) principle（tdp v0.8.3），
+畫面用 [terminu-go](https://github.com/vulcanshen/terminu-go)（v0.2.2）。
 
 ## 運作方式
 
@@ -77,7 +77,7 @@ demou 是家族的操作教學 app，遵循 [terminu design](https://github.com/
 
 ## 已知的牆與未做
 
-- 沒有尚未符合 tdp 的地方，所以沒有 `docs/demou-terminu-fix.md`（tdp E7）：照 tdp v0.7.4 的清單對過，再照 v0.8.0 到 v0.8.2 改了的
+- 沒有尚未符合 tdp 的地方，所以沒有 `docs/demou-terminu-fix.md`（tdp E7）：照 tdp v0.7.4 的清單對過，再照 v0.8.0 到 v0.8.3 改了的
   地方對過；剩下的都出在 terminu-go v0.1.13，v0.2.0 都修好了。程式裡沒有 `TODO(tdp …)`、`TODO(lib …)`。
 - 規範的盲點、lib 要補的、清單的問題回報給 terminu 的 session（DM4 起），由它記進紀錄（`terminu 的筆記`）。
   DM4–DM39 都定了。
