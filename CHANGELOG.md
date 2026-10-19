@@ -9,4 +9,6 @@ Each release names the version of terminu design (tdp) it follows.
 - Three screens over one bookshelf of twenty classics: `[M]ove` (shelves and their books, with an Authors tab), `[A]ctions`
   (open, begin, finish, sort) and `[P]opups` (remove, after asking; the NEW BOOK form with a select over it); `q` asks
   first
+- On a first page or an author, `v` selects and `y` copies to the terminal's clipboard
+- Needs a terminal of at least 80×24; a smaller one shows demou's name and the size it needs
 - demou's mark, `docs/icon.svg`

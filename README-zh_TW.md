@@ -26,7 +26,7 @@ terminu 家族的每一個 app 操作都一樣：同一組鍵用來移動、找�
 - macOS 或 Linux（WSL 也可以）。
 - [Nerd Font](https://www.nerdfonts.com) 的終端機設定檔：icon 與框線都是 Nerd Font 的字。
 - truecolor（24-bit 色）的終端機：淡化的顏色與層色在 256 色下分不出來。
-- 至少 80 欄寬、24 列高的終端機。
+- 至少 80 欄寬、24 列高的終端機；比這小時 demou 只顯示名稱與需要的大小，終端機拉大就回到原來的樣子。
 
 demou 啟動時會量 icon 與 powerline 符號佔幾格。量錯時自己設：
 
@@ -36,8 +36,11 @@ demou 啟動時會量 icon 與 powerline 符號佔幾格。量錯時自己設：
 | `DEMOU__POWERLINE_WIDTH` | powerline 符號佔幾格，只給 demou |
 | `TERMINU__ICON_WIDTH` | icon 佔幾格，給 terminu 家族每一個 app：設一次，全家族都讀到 |
 | `TERMINU__POWERLINE_WIDTH` | powerline 符號佔幾格，給 terminu 家族每一個 app |
+| `LC_TERMINU_ICON_WIDTH` | icon 佔幾格，由有 ssh 的家族 app 隔著 ssh 帶過來 |
+| `LC_TERMINU_POWERLINE_WIDTH` | powerline 符號佔幾格，由有 ssh 的家族 app 隔著 ssh 帶過來 |
 
-在家族 app 的終端機裡跑時，`TERMINU__` 的兩個由外層的 app 替它設好。
+icon 與 powerline 符號各自照表上的順序，用第一個有設的；都沒設才自己量。在家族 app 的終端機裡跑時，`TERMINU__` 的兩個由外層的 app 替它設好；從家族 app 隔著 ssh
+連過來時，帶過來的是 `LC_TERMINU_` 的兩個。
 
 ### Homebrew
 
@@ -101,6 +104,7 @@ demou help       印出命令列的用法（-h、--help）
 | `j\|k`、`h\|l` | 移動；`h\|l` 切 tab；走過最後一個就回到第一個 |
 | `gg\|G` | 到最上面、到最下面 |
 | `Enter` | 最直觀的那件事：在這裡是打開那本書的第一頁 |
+| `v`、`y` | 在一頁文字上：按 `v`、移到起點，再按 `v`、移動選取；`y` 複製 |
 | `Esc` | 關掉最上層的 popup，一次一層；不會離開 demou |
 | `q` | 離開，先問 |
 

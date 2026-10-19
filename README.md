@@ -29,7 +29,8 @@ every start is the same shelf of twenty classics.
 - macOS or Linux (WSL too).
 - A [Nerd Font](https://www.nerdfonts.com) terminal profile: the icons and the frames are Nerd Font glyphs.
 - A truecolor (24-bit) terminal: the faded colours and the layer colours cannot be told apart in 256 colours.
-- A terminal at least 80 columns wide and 24 rows high.
+- A terminal at least 80 columns wide and 24 rows high; in a smaller one demou shows only its name and the size it
+  needs, and comes back as it was once the terminal grows.
 
 demou measures how many cells an icon and a powerline symbol take when it starts. When it gets them wrong, set them:
 
@@ -39,8 +40,12 @@ demou measures how many cells an icon and a powerline symbol take when it starts
 | `DEMOU__POWERLINE_WIDTH` | The cells a powerline symbol takes, for demou |
 | `TERMINU__ICON_WIDTH` | The cells an icon takes, for every terminu family app: set it once and they all read it |
 | `TERMINU__POWERLINE_WIDTH` | The cells a powerline symbol takes, for every terminu family app |
+| `LC_TERMINU_ICON_WIDTH` | The cells an icon takes, brought over ssh by a family app with ssh |
+| `LC_TERMINU_POWERLINE_WIDTH` | The cells a powerline symbol takes, brought over ssh by a family app with ssh |
 
-Run inside a family app's terminal, demou gets the `TERMINU__` ones from the app around it.
+For an icon and for a powerline symbol each, demou takes the first one set in the order of the table, and measures
+only when none is. Run inside a family app's terminal, demou gets the
+`TERMINU__` ones from the app around it; reached over ssh from one, the `LC_TERMINU_` ones.
 
 ### Homebrew
 
@@ -105,6 +110,7 @@ The keys every family app shares:
 | `j\|k`, `h\|l` | Move; `h\|l` switch tabs; past the last one you are back at the first |
 | `gg\|G` | To the top, to the bottom |
 | `Enter` | The obvious thing: here, open the book at its first page |
+| `v`, `y` | On a page of text: `v` and move to where to start, `v` again and move to select; `y` copies it |
 | `Esc` | Close the popup on top, one at a time; it never leaves demou |
 | `q` | Quit, after asking |
 
