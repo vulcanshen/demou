@@ -21,7 +21,7 @@ func newActionsScreen(d *demou) *actionsScreen {
 	s := &actionsScreen{d: d}
 	s.list = &terminu.List{
 		// Year sorts and Shelf decides what can be done, so Author goes first.
-		Columns: []terminu.Column{{Title: "Title"}, {Title: "Author", Drop: 1}, {Title: "Year", Number: true, Drop: 2},
+		Columns: []terminu.Column{{Title: "Title", Shrink: true}, {Title: "Author", Shrink: true, Drop: 1}, {Title: "Year", Number: true, Drop: 2},
 			{Title: "Shelf", Drop: 3}},
 		EmptyFact: "No books", EmptyHint: "Press [Space] to see what you can do here",
 	}

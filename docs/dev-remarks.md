@@ -1,7 +1,7 @@
 # demou 開發者備忘
 
-demou 是家族的操作教學 app，遵循 [terminu design](https://github.com/vulcanshen/terminu) principle（tdp v0.8.1），
-畫面用 [terminu-go](https://github.com/vulcanshen/terminu-go)（v0.2.0）。
+demou 是家族的操作教學 app，遵循 [terminu design](https://github.com/vulcanshen/terminu) principle（tdp v0.8.2），
+畫面用 [terminu-go](https://github.com/vulcanshen/terminu-go)（v0.2.1）。
 
 ## 運作方式
 
@@ -43,9 +43,10 @@ demou 是家族的操作教學 app，遵循 [terminu design](https://github.com/
 - **從 Space menu 開 NEW BOOK：取消回到 menu，Add 之後清掉 menu**：新增不在 tdp T1 的表上，由 app 推演。加好之後 cursor 停在新書上
   （tdp K3），menu 的 item 區講的卻是原本 cursor 上那本書，留著只會對不上；取消時照 tdp T1「取消一律回到 source」。回報成 DM38，
   terminu 照 T1 推得這個做法。表單打開時 menu 留在底下（lib 的預設）；Add 時 `Submit` 回 `App.CloseAll`，表單與 menu 一起收。
-- **欄放不下時先收哪一欄**（layout/panel，`Column.Drop`）：書名永遠不收。MOVE 的書連作者也不收，一本書是書名加作者，80 欄時收掉
-  年份、兩欄照比例縮；ACTIONS 先收作者，年份（排序用）與書架（決定能做什麼）留到最後；POPUPS 先收書架；作者 tab 先收卒年。
-  在 80 欄以上，只有 MOVE 的書會收。
+- **欄的寬度與先收哪一欄**（layout/panel）：書名、作者是長的名稱，標成可以截短（`Column.Shrink`），分剩下的寬度、太長從尾端截；
+  年份、書架、本數這種短值照最寬的值、不縮。截到最少寬度還放不下才整欄收（`Column.Drop`）：書名永遠不收；MOVE 的書連作者也不收，
+  一本書是書名加作者；ACTIONS 先收作者，年份（排序用）與書架（決定能做什麼）留到最後；POPUPS 先收書架；作者 tab 先收卒年。
+  80×24 時每一頁的欄都在，只有 MOVE 的書名與作者截短一點。
 - **Title 是必填，在 text popup 就擋**：Title 的 text popup 有自己的檢查，空著按 `Enter` 寫出 `Title is required`、popup 不關（tdp K3）；
   表單的 Add 也檢查一次，給沒打開過 Title 就按 Add 的人。
 - **最低尺寸 80×24**：tdp L1 讓 app 把最低尺寸從預設的 80×40 調低。demou 選 80×24：新開的終端機視窗常常就是 80×24（macOS 的
@@ -76,7 +77,7 @@ demou 是家族的操作教學 app，遵循 [terminu design](https://github.com/
 
 ## 已知的牆與未做
 
-- 沒有尚未符合 tdp 的地方，所以沒有 `docs/demou-terminu-fix.md`（tdp E7）：照 tdp v0.7.4 的清單對過，再照 v0.8.0、v0.8.1 改了的
+- 沒有尚未符合 tdp 的地方，所以沒有 `docs/demou-terminu-fix.md`（tdp E7）：照 tdp v0.7.4 的清單對過，再照 v0.8.0 到 v0.8.2 改了的
   地方對過；剩下的都出在 terminu-go v0.1.13，v0.2.0 都修好了。程式裡沒有 `TODO(tdp …)`、`TODO(lib …)`。
 - 規範的盲點、lib 要補的、清單的問題回報給 terminu 的 session（DM4 起），由它記進紀錄（`terminu 的筆記`）。
   DM4–DM39 都定了。

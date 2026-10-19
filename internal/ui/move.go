@@ -22,7 +22,8 @@ const authorsTab = 1
 
 func newMoveScreen(d *demou) *moveScreen {
 	m := &moveScreen{d: d}
-	// The columns that do not fit go first to last by Drop; the name never
+	// Names (titles, authors) shrink to share the room; short values keep
+	// their width. Columns that still do not fit go by Drop, the name never
 	// (layout/panel).
 	m.shelves = &terminu.List{Columns: []terminu.Column{{Title: "Shelf"}, {Title: "Books", Number: true, Drop: 1}},
 		OnMove: func(terminu.Row) tea.Cmd { m.fill(); return nil }}
@@ -75,7 +76,8 @@ func (m *moveScreen) fill() {
 	}
 	var rows []terminu.Row
 	if m.books.Tab == authorsTab {
-		m.list.Columns = []terminu.Column{{Title: "Name"}, {Title: "Born", Number: true, Drop: 2}, {Title: "Died", Number: true, Drop: 1}}
+		m.list.Columns = []terminu.Column{{Title: "Name", Shrink: true}, {Title: "Born", Number: true, Drop: 2},
+			{Title: "Died", Number: true, Drop: 1}}
 		seen := map[string]bool{}
 		for _, b := range on {
 			if seen[b.author] {
@@ -86,8 +88,9 @@ func (m *moveScreen) fill() {
 			rows = append(rows, terminu.Row{ID: a.name, Cells: []string{a.name, strconv.Itoa(a.born), strconv.Itoa(a.died)}})
 		}
 	} else {
-		// A title and its author always show; at 80 columns the year goes.
-		m.list.Columns = []terminu.Column{{Title: "Title"}, {Title: "Author"}, {Title: "Year", Number: true, Drop: 1}}
+		// A title and its author always show.
+		m.list.Columns = []terminu.Column{{Title: "Title", Shrink: true}, {Title: "Author", Shrink: true},
+			{Title: "Year", Number: true, Drop: 1}}
 		for _, b := range on {
 			rows = append(rows, terminu.Row{ID: b.id, Cells: []string{b.title, b.author, b.yearText()}})
 		}

@@ -18,7 +18,7 @@ type popupsScreen struct {
 func newPopupsScreen(d *demou) *popupsScreen {
 	p := &popupsScreen{d: d}
 	p.list = &terminu.List{
-		Columns:   []terminu.Column{{Title: "Title"}, {Title: "Author", Drop: 2}, {Title: "Shelf", Drop: 1}},
+		Columns:   []terminu.Column{{Title: "Title", Shrink: true}, {Title: "Author", Shrink: true, Drop: 2}, {Title: "Shelf", Drop: 1}},
 		EmptyFact: "No books on the shelf", EmptyHint: "Press [n] to add a book",
 	}
 	books := &terminu.Panel{Label: "Books", Body: p.list, Actions: []terminu.Action{
