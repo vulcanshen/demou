@@ -8,13 +8,13 @@
 
 - **違反**：tdp L1「比最低尺寸小時……不畫 app 的畫面，只在正中央畫兩列」、「一直縮到 1×1 都不能當掉」；tdp E5 的測試邊界要含比最低
   尺寸小、一直到 1×1 的尺寸。清單 L1-2～L1-6、E5-10、E5-13。
-- **在哪裡**：terminu-go v0.1.13 的 `App` 沒有最低尺寸。demou 的最低尺寸是 80×24（暫定，見 `docs/dev-remarks.md`）。
+- **在哪裡**：terminu-go v0.1.13 的 `App` 沒有最低尺寸。demou 的最低尺寸是 80×24（`docs/dev-remarks.md` 的設計決定）。
 - **現況**：比 80×24 小時照樣畫三個畫面與 popup，在那些尺寸上還會：
   - 開著 popup 縮到 5 列以下，`makeslice: cap out of range` 後結束（DM4）；
   - 10 列以下 NEW BOOK 表單比畫面高度 − 2 還高，蓋住 footer（DM5）；8 列時 Title 的 text popup 看不到打字列（DM6）；
   - 40×12 時空狀態的句子貼著框（DM13）、popup 的 hint 捨掉 `Esc`（DM17）；15 欄以下膠囊與欄被直接切掉（DM37）。
-- **該怎麼改**：lib 加最低尺寸（預設 80×40、app 可以調低）與「只顯示名稱與提示」的畫面；demou 設 80×24，`TestE5PopupBiggerThanTheScreen`
-  加 80×5、1×1，驗名稱與提示（`TODO(lib DM4)`）。
+- **該怎麼改**：lib 加最低尺寸（預設 80×40、app 可以調低）與「只顯示名稱與提示」的畫面（terminu-go v0.2.0 的 `App.MinWidth`、
+  `App.MinHeight`）；demou 設 80×24，`TestE5PopupBiggerThanTheScreen` 加 80×5、1×1，驗名稱與提示（`TODO(lib DM4)`）。
 
 ## key reference 列了不存在的鍵、移動鍵的寫法不對（DM9、DM10）
 

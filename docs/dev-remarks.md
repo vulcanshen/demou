@@ -45,9 +45,10 @@ demou 是家族的操作教學 app，遵循 [terminu design](https://github.com/
   等 lib 能在 target 做完之後清掉 source）。
 - **Title 是必填，在 text popup 就擋**：Title 的 text popup 有自己的檢查，空著按 `Enter` 寫出 `Title is required`、popup 不關（tdp K3）；
   表單的 Add 也檢查一次，給沒打開過 Title 就按 Add 的人。
-- **最低尺寸 80×24（暫定）**：tdp L1 讓 app 把最低尺寸從預設的 80×40 調低。demou 選 80×24：新開的終端機視窗常常就是 80×24（macOS 的
+- **最低尺寸 80×24**：tdp L1 讓 app 把最低尺寸從預設的 80×40 調低。demou 選 80×24：新開的終端機視窗常常就是 80×24（macOS 的
   Terminal 預設），看完影片想跟著按的人一打開就能用，不必先拉大視窗；demou 的畫面最多兩個 panel、popup 都不大，畫面測試在 80×24
-  跑過每一種 popup。比它小（例：40×12）時，等 lib 有最低尺寸，就只顯示名稱與 `needs a terminal of at least 80×24`。已回報（DM39）。
+  跑過每一種 popup。比它小（例：40×12）時只顯示名稱與 `needs a terminal of at least 80×24`。user 2026-10-19 定的（DM39）；
+  lib 的接口是 terminu-go v0.2.0 的 `App.MinWidth`、`App.MinHeight`，升級時設進去（`TODO(lib DM4)`）。
 - **`q` 先問**：`Quit demou?`，每個畫面都一樣（tdp K9：離開要不要先問由 app 決定）。popup 那一章要示範「`q` 離開前先問」
   （user 定的章節內容）；看完影片自己按的人，也不會一按 `q` 就離開、還沒按完的書架從頭來過。
 - **家族 mark**：user 用 kamonu 畫的，U 框裡上面 D、E，下面 M、O；`docs/icon.svg` 是 kamonu 匯出的檔，分字註解照 tdp S5

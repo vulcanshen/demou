@@ -90,7 +90,7 @@ func TestL4EveryLineIsTheTerminalsWidth(t *testing.T) {
 // TODO(lib DM4): tdp E5 also wants the sizes below the least demou needs
 // (80×24, tdp L1) down to 1×1, where only the name and the size it needs
 // show. The lib panics below 6 rows and has no least size yet. Once it
-// has: demou sets 80×24; below it (80×5, 1×1, and the 40×12, 24×8 of L4)
+// has (App.MinWidth, App.MinHeight): demou sets 80×24; below it (80×5, 1×1, and the 40×12, 24×8 of L4)
 // the screen is the name and the hint; the popups here open at 120×40 and
 // shrink to 80×40, 120×24 and 80×24.
 func TestE5PopupBiggerThanTheScreen(t *testing.T) {
