@@ -31,9 +31,11 @@ func newPopupsScreen(d *demou) *popupsScreen {
 		d.openBook(p.list),
 		{Key: "r", Label: "remove", Desc: "take it off the shelf", Scope: terminu.ItemScope, Hint: "remove", Ask: p.removeAsk,
 			Do: func() tea.Cmd { d.remove(d.current(p.list)); return nil }},
-		// Run from the Space menu, the form takes the menu's place: once the
-		// book is added the cursor is on it, and the menu was about the one
-		// under it before (tdp T1, the app's call).
+		// Run from the Space menu, the form closes the menu as it opens.
+		// TODO(lib DM38): keep the menu under the form, so that Esc goes back
+		// to it (tdp T1), and clear it once the book is added: the cursor is
+		// then on the new book, and the menu was about the one under it
+		// before. The lib can't clear a source after its target is done yet.
 		{Key: "n", Label: "new book", Desc: "put another book on the shelf", Scope: terminu.PanelScope, Hint: "new", Do: p.newBook},
 	}}
 	p.screen = &terminu.Screen{Name: "Popups", Key: "P", Desc: "popups over popups", Panels: []*terminu.Panel{books}}

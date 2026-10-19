@@ -39,9 +39,10 @@ demou 是家族的操作教學 app，遵循 [terminu design](https://github.com/
   改它的 `Question`。不在 `Do` 裡自己開 confirm：那樣從 Space menu 執行時 menu 會先關掉，`Esc` 回不到 menu（tdp F4）；而 demou
   教的正是「`Esc` 一次關一層」。接受之後 menu 一起收掉：刪除讓那一項不在了（tdp T1 的表）。
 - **從 Space menu 打開的書與作者，`Esc` 回到 menu**：Open 是「打開東西來看」，照 tdp T1 的表保留 source（`Action.Stay`）。
-- **從 Space menu 開 NEW BOOK，menu 跟著收掉（暫定）**：新增不在 tdp T1 的表上，由 app 推演。加好之後 cursor 停在新書上（tdp K3），
-  menu 的 item 區講的卻是原本 cursor 上那本書，留著只會對不上；所以表單打開時 menu 就收掉（v0.1.13 的 Action 沒有 `Stay` 就是這樣）。
-  代價是在表單上 `Esc` 取消時回到 panel，不回到 menu。已回報（DM38）。
+- **從 Space menu 開 NEW BOOK：取消回到 menu，Add 之後清掉 menu**：新增不在 tdp T1 的表上，由 app 推演。加好之後 cursor 停在新書上
+  （tdp K3），menu 的 item 區講的卻是原本 cursor 上那本書，留著只會對不上；取消時照 tdp T1「取消一律回到 source」。回報成 DM38，
+  terminu 照 T1 推得這個做法。v0.1.13 做不到「取消留著、做完清掉」，現在表單打開時 menu 就收掉，取消回到 panel（`TODO(lib DM38)`，
+  等 lib 能在 target 做完之後清掉 source）。
 - **Title 是必填，在 text popup 就擋**：Title 的 text popup 有自己的檢查，空著按 `Enter` 寫出 `Title is required`、popup 不關（tdp K3）；
   表單的 Add 也檢查一次，給沒打開過 Title 就按 Add 的人。
 - **最低尺寸 80×24（暫定）**：tdp L1 讓 app 把最低尺寸從預設的 80×40 調低。demou 選 80×24：新開的終端機視窗常常就是 80×24（macOS 的
@@ -77,6 +78,7 @@ demou 是家族的操作教學 app，遵循 [terminu design](https://github.com/
   - `TODO(lib DM7)`：空的 Title 按 `Enter` 的測試。v0.1.13 會擋；本機還沒發版的 lib 把它當成「值沒改」直接關，等 lib 照 tdp v0.8.0 的
     K3 改回來，兩邊都擋了才加測試（`make check` 兩邊都要過）。
   - `TODO(lib DM25)`：兩個 viewer 的選取模式。
+  - `TODO(lib DM38)`：從 Space menu 開的 NEW BOOK，取消回到 menu、Add 之後清掉。
 - 規範的盲點、lib 要補的、清單的問題回報給 terminu 的 session（DM4 起），由它記進紀錄（`terminu 的筆記`）。
   DM4–DM37 都在 tdp v0.8.0 定了。
 - 之前的 DM1–DM3，tdp v0.7.1 都定了：
