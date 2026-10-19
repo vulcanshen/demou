@@ -108,12 +108,16 @@ func (d *demou) add(title, author string) string {
 }
 
 // openBook is Enter on a book, the same on every screen (tdp K3): its first
-// page. A book added in demou has none.
+// page. A book added in demou has none. Run from the Space menu, the page
+// opens over the menu and Esc goes back to it: a thing opened to look at
+// keeps its source (tdp T1).
 func (d *demou) openBook(l *terminu.List) terminu.Action {
-	return terminu.Action{Key: "Enter", Label: "Open", Desc: "its first page", Scope: terminu.ItemScope, Hint: "open",
+	return terminu.Action{Key: "Enter", Label: "Open", Desc: "its first page", Scope: terminu.ItemScope, Hint: "open", Stay: true,
 		Disabled: func() bool { b := d.current(l); return b == nil || b.firstPage == "" },
 		Do: func() tea.Cmd {
 			b := d.current(l)
+			// TODO(lib DM25): every viewer has a selection mode (tdp F1); the
+			// lib gives it to every viewer from its next release.
 			return d.a.Viewer(&terminu.Viewer{Title: "First page", Subject: b.title, Glyph: glyphBook,
 				Lines: []string{b.firstPage}})
 		}}

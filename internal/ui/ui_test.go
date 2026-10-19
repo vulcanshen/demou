@@ -12,33 +12,34 @@ import (
 	terminu "github.com/vulcanshen/terminu-go"
 )
 
-// states are the keys from the start to every screen and every kind of
-// popup demou opens; popup marks the ones with a popup on top.
+// states are the keys from the start to every screen and every popup, or
+// popups over popups, demou opens. The screens come first, then the popups,
+// then the splash.
 var states = []struct {
-	name  string
-	keys  []string
-	popup bool
+	name string
+	keys []string
 }{
-	{"MOVE", nil, false},
-	{"MOVE, [2] focused", []string{"Tab"}, false},
-	{"MOVE, the AUTHORS tab", []string{"Tab", "l"}, false},
-	{"Space menu", []string{"Space"}, true},
-	{"global operation popup over the Space menu", []string{"Space", "G", "Enter"}, true},
-	{"key reference", []string{"?"}, true},
-	{"first page", []string{"Tab", "Enter"}, true},
-	{"an author", []string{"Tab", "l", "Enter"}, true},
-	{"ACTIONS", []string{"A"}, false},
-	{"ACTIONS, Space menu", []string{"A", "Space"}, true},
-	{"POPUPS", []string{"P"}, false},
-	{"remove confirm", []string{"P", "r"}, true},
-	{"remove confirm over the Space menu", []string{"P", "Space", "j", "Enter"}, true},
-	{"NEW BOOK form", []string{"P", "n"}, true},
-	{"title text popup over the form", []string{"P", "n", "Enter"}, true},
-	{"author select over the form", []string{"P", "n", "j", "Enter"}, true},
-	{"discard confirm over the form", []string{"P", "n", "Enter", "x", "Enter", "Esc"}, true},
-	{"form errors", []string{"P", "n", "Tab", "Enter"}, true},
-	{"quit confirm", []string{"q"}, true},
-	{"splash", []string{"V"}, false},
+	{"MOVE", nil},
+	{"MOVE, [2] focused", []string{"Tab"}},
+	{"MOVE, the AUTHORS tab", []string{"Tab", "l"}},
+	{"Space menu", []string{"Space"}},
+	{"global operation popup over the Space menu", []string{"Space", "G", "Enter"}},
+	{"key reference", []string{"?"}},
+	{"first page", []string{"Tab", "Enter"}},
+	{"an author", []string{"Tab", "l", "Enter"}},
+	{"ACTIONS", []string{"A"}},
+	{"ACTIONS, Space menu", []string{"A", "Space"}},
+	{"POPUPS", []string{"P"}},
+	{"first page over the Space menu", []string{"P", "Space", "Enter"}},
+	{"remove confirm", []string{"P", "r"}},
+	{"remove confirm over the Space menu", []string{"P", "Space", "j", "Enter"}},
+	{"NEW BOOK form", []string{"P", "n"}},
+	{"title text popup over the form", []string{"P", "n", "Enter"}},
+	{"author select over the form", []string{"P", "n", "j", "Enter"}},
+	{"discard confirm over the form", []string{"P", "n", "Enter", "x", "Enter", "Esc"}},
+	{"form errors", []string{"P", "n", "Tab", "Enter"}},
+	{"quit confirm", []string{"q"}},
+	{"splash", []string{"V"}},
 }
 
 // iconWidths are the widths of an icon and a powerline symbol the screen
@@ -66,18 +67,17 @@ type sized struct {
 	w, h  int
 	name  string
 	keys  []string
-	popup bool
 	small [2]int // the size to shrink to once it is open; 0 for none
 }
 
 // TestL4EveryLineIsTheTerminalsWidth is tdp L4: on every screen and under
-// every popup, at many sizes; the popup on top is measured alone too (tdp
-// E5).
+// every popup, at many sizes. demou measures its whole screen; each popup's
+// own frame is the lib's to measure, the lib draws it (tdp E8).
 func TestL4EveryLineIsTheTerminalsWidth(t *testing.T) {
 	var cases []sized
 	for _, sz := range [][2]int{{80, 40}, {120, 40}, {80, 24}, {40, 12}, {24, 8}} {
 		for _, st := range states {
-			cases = append(cases, sized{w: sz[0], h: sz[1], name: st.name, keys: st.keys, popup: st.popup})
+			cases = append(cases, sized{w: sz[0], h: sz[1], name: st.name, keys: st.keys})
 		}
 	}
 	eachIconWidth(t, cases, func(c sized) string { return fmt.Sprintf("%dx%d %s", c.w, c.h, c.name) }, checkSized)
@@ -87,8 +87,12 @@ func TestL4EveryLineIsTheTerminalsWidth(t *testing.T) {
 // with (tdp F7), so shrinking the terminal leaves it wider than the
 // screen, taller, or both; every line still fits.
 //
-// TODO(lib DM4): shrinking a popup's screen below 6 rows panics; add 80×5
-// and 1×1 here once it does not.
+// TODO(lib DM4): tdp E5 also wants the sizes below the least demou needs
+// (80×24, tdp L1) down to 1×1, where only the name and the size it needs
+// show. The lib panics below 6 rows and has no least size yet. Once it
+// has: demou sets 80×24; below it (80×5, 1×1, and the 40×12, 24×8 of L4)
+// the screen is the name and the hint; the popups here open at 120×40 and
+// shrink to 80×40, 120×24 and 80×24.
 func TestE5PopupBiggerThanTheScreen(t *testing.T) {
 	var cases []sized
 	for _, st := range states[3:] { // the popups
@@ -106,12 +110,6 @@ func checkSized(t *testing.T, c sized) {
 		hs.send(tea.WindowSizeMsg{Width: c.small[0], Height: c.small[1]})
 	}
 	hs.fullWidth(c.name)
-	// A popup bigger than the screen is cut, so its frame is not whole.
-	// TODO(lib DM5): on a screen 10 rows high or less a form is drawn taller
-	// than the screen lets it be; measure it there too once it fits.
-	if c.popup && c.small[0] == 0 && c.h > 10 {
-		hs.popupBox(c.name)
-	}
 }
 
 // The same books, in the same order, on the same shelves, every time demou
@@ -204,7 +202,7 @@ func TestActionsSpaceMenu(t *testing.T) {
 	hs.keys("A", "Space")
 	hs.contains("ITEM OPERATION", "[Enter] Open", "[b]egin", "[f]inish", "PANEL OPERATION", "[s]ort", "Global operation")
 	hs.keys("G", "Enter")
-	hs.contains("GLOBAL OPERATION", "[M]ove", "[A]ctions", "[P]opups", "Quit")
+	hs.contains("GLOBAL OPERATION", "[M]ove", "[A]ctions", "[P]opups", "leave demou")
 	hs.keys("Esc") // one layer at a time (tdp K4)
 	hs.contains("ITEM OPERATION")
 	hs.keys("Esc")
@@ -264,6 +262,20 @@ func TestPopupsRemoveFromTheMenu(t *testing.T) {
 	hs.lacks("ITEM OPERATION")
 }
 
+// A page opened from the Space menu is a thing to look at: it goes over the
+// menu, and Esc goes back to it (tdp T1).
+func TestOpenFromTheMenuGoesBackToIt(t *testing.T) {
+	t.Parallel()
+	for _, keys := range [][]string{{"P", "Space", "Enter"}, {"Tab", "l", "Space", "Enter"}} {
+		hs := newHarness(t, 80, 40)
+		hs.keys(keys...)
+		hs.contains(" — ") // FIRST PAGE — …, AUTHOR — …
+		hs.keys("Esc")
+		hs.lacks(" — ")
+		hs.contains("ITEM OPERATION")
+	}
+}
+
 func TestPopupsNewBook(t *testing.T) {
 	t.Parallel()
 	hs := newHarness(t, 80, 40)
@@ -299,6 +311,11 @@ func TestPopupsNewBookNeedsTitleAndAuthor(t *testing.T) {
 		t.Fatal("an empty form added a book")
 	}
 }
+
+// TODO(lib DM7): Enter on the Title left empty is a wrong value, not a quiet
+// close (tdp K3): "Title is required" in the text popup, which stays open.
+// terminu-go v0.1.13 does so; the lib in the making closes it while the
+// value is the one it opened with. Test it on the release that does both.
 
 func TestPopupsChangedFormAsksBeforeEsc(t *testing.T) {
 	t.Parallel()

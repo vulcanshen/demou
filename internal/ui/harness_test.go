@@ -2,7 +2,6 @@ package ui
 
 import (
 	"os"
-	"slices"
 	"strings"
 	"testing"
 	"time"
@@ -141,77 +140,4 @@ func (hs *harness) fullWidth(what string) {
 			hs.t.Fatalf("%s: line %d is %d cells on a screen %d wide: %q", what, i, got, w, terminu.StripStyles(l))
 		}
 	}
-}
-
-// popupBox measures the popup on top alone (tdp E5): a frame of heavy lines,
-// whole on the screen and centred on it (tdp F7), each of its rows ending in
-// the same cell. Of such frames it takes the innermost; a popup can lie over
-// another, and a focused panel as wide as the screen is drawn with heavy
-// lines too.
-func (hs *harness) popupBox(what string) {
-	hs.t.Helper()
-	g := hs.cells()
-	w, _ := hs.d.a.Size()
-	inner := 0
-	for top, row := range g {
-		for left, c := range row {
-			if c != "┏" {
-				continue
-			}
-			i := slices.Index(row[left+1:], "┓")
-			if i < 0 {
-				continue
-			}
-			right := left + 1 + i
-			if left < 1 || max(left-(w-1-right), w-1-right-left) > 1 {
-				continue // not centred: a panel
-			}
-			if bottom := boxBottom(g, top, left, right); bottom > 0 {
-				if area := (right - left) * (bottom - top); inner == 0 || area < inner {
-					inner = area
-				}
-			}
-		}
-	}
-	if inner == 0 {
-		hs.t.Fatalf("%s: no popup drawn as one whole frame:\n%s", what, hs.text())
-	}
-}
-
-// boxBottom is the row of the bottom border under a top border from left to
-// right, when every row between ends in its sides; 0 for none.
-func boxBottom(g [][]string, top, left, right int) int {
-	at := func(y, x int) string {
-		if x >= len(g[y]) {
-			return ""
-		}
-		return g[y][x]
-	}
-	for y := top + 1; y < len(g); y++ {
-		l, r := at(y, left), at(y, right)
-		if l == "┗" && r == "┛" {
-			return y
-		}
-		if (l != "┃" && l != "┣") || (r != "┃" && r != "┫") {
-			return 0
-		}
-	}
-	return 0
-}
-
-// cells is the screen as plain text, one string a cell: a character two
-// cells wide takes the first and leaves "" in the second.
-func (hs *harness) cells() [][]string {
-	var g [][]string
-	for _, l := range hs.frame() {
-		var row []string
-		for _, r := range l {
-			row = append(row, string(r))
-			for range terminu.Width(string(r)) - 1 {
-				row = append(row, "")
-			}
-		}
-		g = append(g, row)
-	}
-	return g
 }

@@ -1,6 +1,8 @@
 package ui
 
 import (
+	"errors"
+
 	tea "github.com/charmbracelet/bubbletea"
 	terminu "github.com/vulcanshen/terminu-go"
 )
@@ -29,6 +31,9 @@ func newPopupsScreen(d *demou) *popupsScreen {
 		d.openBook(p.list),
 		{Key: "r", Label: "remove", Desc: "take it off the shelf", Scope: terminu.ItemScope, Hint: "remove", Ask: p.removeAsk,
 			Do: func() tea.Cmd { d.remove(d.current(p.list)); return nil }},
+		// Run from the Space menu, the form takes the menu's place: once the
+		// book is added the cursor is on it, and the menu was about the one
+		// under it before (tdp T1, the app's call).
 		{Key: "n", Label: "new book", Desc: "put another book on the shelf", Scope: terminu.PanelScope, Hint: "new", Do: p.newBook},
 	}}
 	p.screen = &terminu.Screen{Name: "Popups", Key: "P", Desc: "popups over popups", Panels: []*terminu.Panel{books}}
@@ -56,6 +61,13 @@ func (p *popupsScreen) newBook() tea.Cmd {
 			{Label: "Title", Value: func() string { return title }, Empty: "not set",
 				Edit: func() terminu.Input {
 					return terminu.TextInput{Title: "Title", Glyph: glyphPencil, Prompt: "The title of the book", Old: title,
+						// Enter on an empty title says so rather than close (tdp K3).
+						Check: func(s string) error {
+							if s == "" {
+								return errors.New("Title is required")
+							}
+							return nil
+						},
 						Done: func(s string) tea.Cmd { title = s; return nil }}
 				},
 				Check: func() string {

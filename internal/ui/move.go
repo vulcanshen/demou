@@ -30,7 +30,7 @@ func newMoveScreen(d *demou) *moveScreen {
 	open := d.openBook(m.list)
 	open.Hidden = func() bool { return m.books.Tab == authorsTab }
 	m.books.Actions = []terminu.Action{open,
-		{Key: "Enter", Label: "Open", Desc: "who they were", Scope: terminu.ItemScope, Hint: "open",
+		{Key: "Enter", Label: "Open", Desc: "who they were", Scope: terminu.ItemScope, Hint: "open", Stay: true,
 			Hidden: func() bool { return m.books.Tab != authorsTab }, Do: m.openAuthor}}
 	shelves := &terminu.Panel{Label: "Shelves", Body: m.shelves, Details: m.books, Actions: []terminu.Action{
 		{Key: "Enter", Label: "Books", Desc: "the books on this shelf", Scope: terminu.ItemScope, Hint: "books",
@@ -102,5 +102,6 @@ func (m *moveScreen) openAuthor() tea.Cmd {
 			lines = append(lines, b.title)
 		}
 	}
+	// TODO(lib DM25): a selection mode, as on the first page.
 	return m.d.a.Viewer(&terminu.Viewer{Title: "Author", Subject: a.name, Glyph: glyphAuthor, Lines: lines})
 }
