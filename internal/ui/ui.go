@@ -43,6 +43,9 @@ func New() *terminu.App { return newDemou().a }
 
 func newDemou() *demou {
 	d := &demou{a: terminu.New("demou"), books: theBooks()}
+	// The least size (tdp L1): a new terminal window is often 80×24, and
+	// demou's screens work there; smaller, only its name shows.
+	d.a.MinWidth, d.a.MinHeight = 80, 24
 	d.a.Quit = &terminu.Ask{Title: "Quit", Question: "Quit demou?", Verb: "quit"}
 	d.a.Splash = splash()
 	d.move = newMoveScreen(d)
@@ -108,16 +111,13 @@ func (d *demou) add(title, author string) string {
 }
 
 // openBook is Enter on a book, the same on every screen (tdp K3): its first
-// page. A book added in demou has none. Run from the Space menu, the page
-// opens over the menu and Esc goes back to it: a thing opened to look at
-// keeps its source (tdp T1).
+// page, in a viewer with the lib's selection mode (tdp F1). A book added in
+// demou has none.
 func (d *demou) openBook(l *terminu.List) terminu.Action {
-	return terminu.Action{Key: "Enter", Label: "Open", Desc: "its first page", Scope: terminu.ItemScope, Hint: "open", Stay: true,
+	return terminu.Action{Key: "Enter", Label: "Open", Desc: "its first page", Scope: terminu.ItemScope, Hint: "open",
 		Disabled: func() bool { b := d.current(l); return b == nil || b.firstPage == "" },
 		Do: func() tea.Cmd {
 			b := d.current(l)
-			// TODO(lib DM25): every viewer has a selection mode (tdp F1); the
-			// lib gives it to every viewer from its next release.
 			return d.a.Viewer(&terminu.Viewer{Title: "First page", Subject: b.title, Glyph: glyphBook,
 				Lines: []string{b.firstPage}})
 		}}

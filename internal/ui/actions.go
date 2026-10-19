@@ -20,7 +20,9 @@ const yearCol = 2
 func newActionsScreen(d *demou) *actionsScreen {
 	s := &actionsScreen{d: d}
 	s.list = &terminu.List{
-		Columns:   []terminu.Column{{Title: "Title", Flex: true}, {Title: "Author"}, {Title: "Year", Number: true}, {Title: "Shelf"}},
+		// Year sorts and Shelf decides what can be done, so Author goes first.
+		Columns: []terminu.Column{{Title: "Title"}, {Title: "Author", Drop: 1}, {Title: "Year", Number: true, Drop: 2},
+			{Title: "Shelf", Drop: 3}},
 		EmptyFact: "No books", EmptyHint: "Press [Space] to see what you can do here",
 	}
 	notOn := func(shelf string) func() bool {

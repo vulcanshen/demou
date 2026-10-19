@@ -35,6 +35,8 @@ var states = []struct {
 	{"remove confirm over the Space menu", []string{"P", "Space", "j", "Enter"}},
 	{"NEW BOOK form", []string{"P", "n"}},
 	{"title text popup over the form", []string{"P", "n", "Enter"}},
+	{"title required, over the form", []string{"P", "n", "Enter", "Enter"}},
+	{"NEW BOOK form over the Space menu", []string{"P", "Space", "n"}},
 	{"author select over the form", []string{"P", "n", "j", "Enter"}},
 	{"discard confirm over the form", []string{"P", "n", "Enter", "x", "Enter", "Esc"}},
 	{"form errors", []string{"P", "n", "Tab", "Enter"}},
@@ -71,11 +73,12 @@ type sized struct {
 }
 
 // TestL4EveryLineIsTheTerminalsWidth is tdp L4: on every screen and under
-// every popup, at many sizes. demou measures its whole screen; each popup's
-// own frame is the lib's to measure, the lib draws it (tdp E8).
+// every popup, at many sizes from the least demou needs up. demou measures
+// its whole screen; each popup's own frame is the lib's to measure, the lib
+// draws it (tdp E8).
 func TestL4EveryLineIsTheTerminalsWidth(t *testing.T) {
 	var cases []sized
-	for _, sz := range [][2]int{{80, 40}, {120, 40}, {80, 24}, {40, 12}, {24, 8}} {
+	for _, sz := range [][2]int{{80, 40}, {120, 40}, {80, 24}, {160, 50}} {
 		for _, st := range states {
 			cases = append(cases, sized{w: sz[0], h: sz[1], name: st.name, keys: st.keys})
 		}
@@ -85,18 +88,12 @@ func TestL4EveryLineIsTheTerminalsWidth(t *testing.T) {
 
 // TestE5PopupBiggerThanTheScreen is tdp E5: a popup keeps the size it opened
 // with (tdp F7), so shrinking the terminal leaves it wider than the
-// screen, taller, or both; every line still fits.
-//
-// TODO(lib DM4): tdp E5 also wants the sizes below the least demou needs
-// (80×24, tdp L1) down to 1×1, where only the name and the size it needs
-// show. The lib panics below 6 rows and has no least size yet. Once it
-// has (App.MinWidth, App.MinHeight): demou sets 80×24; below it (80×5, 1×1, and the 40×12, 24×8 of L4)
-// the screen is the name and the hint; the popups here open at 120×40 and
-// shrink to 80×40, 120×24 and 80×24.
+// screen, taller, or both; every line still fits. Below the least size, to
+// 1×1, only the name is left and nothing panics (tdp L1).
 func TestE5PopupBiggerThanTheScreen(t *testing.T) {
 	var cases []sized
 	for _, st := range states[3:] { // the popups
-		for _, small := range [][2]int{{30, 40}, {120, 10}, {30, 10}} {
+		for _, small := range [][2]int{{80, 40}, {120, 24}, {80, 24}, {80, 5}, {1, 1}} {
 			cases = append(cases, sized{w: 120, h: 40, name: st.name, keys: st.keys, small: small})
 		}
 	}
@@ -110,6 +107,47 @@ func checkSized(t *testing.T, c sized) {
 		hs.send(tea.WindowSizeMsg{Width: c.small[0], Height: c.small[1]})
 	}
 	hs.fullWidth(c.name)
+}
+
+// TestL1BelowTheLeastSize is tdp L1: smaller than 80×24 either way, only
+// demou's name shows, and under it the size it needs when that fits. No key
+// acts but Ctrl-C twice, and all comes back as the terminal grows.
+func TestL1BelowTheLeastSize(t *testing.T) {
+	const hint = "needs a terminal of at least 80×24"
+	for _, sz := range [][2]int{{79, 24}, {80, 23}, {40, 12}, {30, 5}, {80, 1}, {1, 1}} {
+		t.Run(fmt.Sprintf("%dx%d", sz[0], sz[1]), func(t *testing.T) {
+			t.Parallel()
+			hs := newHarness(t, 80, 40)
+			hs.keys("P", "Space") // a menu open, to come back to
+			small := tea.WindowSizeMsg{Width: sz[0], Height: sz[1]}
+			hs.send(small)
+			hs.fullWidth("below the least size")
+			if sz[0] >= len("demou") {
+				hs.contains("demou")
+			}
+			if sz[0] >= terminu.Width(hint) && sz[1] >= 2 {
+				hs.contains(hint)
+			} else {
+				hs.lacks(hint)
+			}
+			hs.lacks("ITEM OPERATION")
+			hs.keys("q", "Esc", "j", "Enter", "Ctrl-C")
+			if hs.quit {
+				t.Fatal("a key quit below the least size")
+			}
+			hs.send(tea.WindowSizeMsg{Width: 80, Height: 40})
+			hs.contains("ITEM OPERATION", "[Enter] Open")
+			hs.lacks("FIRST PAGE")
+			if len(hs.d.books) != 20 {
+				t.Fatal("a key acted below the least size")
+			}
+			hs.send(small)
+			hs.keys("Ctrl-C", "Ctrl-C")
+			if !hs.quit {
+				t.Fatal("Ctrl-C twice did not quit below the least size")
+			}
+		})
+	}
 }
 
 // The same books, in the same order, on the same shelves, every time demou
@@ -260,6 +298,25 @@ func TestPopupsRemoveFromTheMenu(t *testing.T) {
 	hs.contains("ITEM OPERATION", "[r]emove")
 	hs.keys("Esc")
 	hs.lacks("ITEM OPERATION")
+	hs.keys("Space", "j", "Enter", "Enter") // removed: the menu goes with it (tdp T1)
+	hs.lacks("ITEM OPERATION", "Remove Pride and Prejudice")
+	if hs.d.book("pride") != nil {
+		t.Fatal("Enter did not remove the book")
+	}
+}
+
+// Both viewers have the lib's selection mode (tdp F1): v, and y copies.
+func TestViewersSelect(t *testing.T) {
+	t.Parallel()
+	for _, keys := range [][]string{{"Tab", "Enter"}, {"Tab", "l", "Enter"}} {
+		hs := newHarness(t, 80, 40)
+		hs.keys(keys...)
+		hs.keys("v")
+		hs.contains("Visual")
+		hs.keys("v", "e", "y")
+		hs.contains("SUCCESS", "Copied")
+		hs.lacks("Visual")
+	}
 }
 
 // A page opened from the Space menu is a thing to look at: it goes over the
@@ -312,10 +369,35 @@ func TestPopupsNewBookNeedsTitleAndAuthor(t *testing.T) {
 	}
 }
 
-// TODO(lib DM7): Enter on the Title left empty is a wrong value, not a quiet
-// close (tdp K3): "Title is required" in the text popup, which stays open.
-// terminu-go v0.1.13 does so; the lib in the making closes it while the
-// value is the one it opened with. Test it on the release that does both.
+// Enter on the Title left empty is a wrong value, not a quiet close (tdp K3):
+// with nothing typed, or typed and deleted.
+func TestPopupsEmptyTitleSaysSo(t *testing.T) {
+	t.Parallel()
+	for _, keys := range [][]string{{"Enter"}, {"a", "Backspace", "Enter"}} {
+		hs := newHarness(t, 80, 40)
+		hs.keys("P", "n", "Enter")
+		hs.keys(keys...)
+		hs.contains("The title of the book", "Title is required")
+	}
+}
+
+// New book from the Space menu: the form goes over the menu and Esc goes
+// back to it (tdp T1); Add closes the menu with the form, the cursor then on
+// the new book.
+func TestPopupsNewBookFromTheMenu(t *testing.T) {
+	t.Parallel()
+	hs := newHarness(t, 80, 40)
+	hs.keys("P", "Space", "n")
+	hs.contains("NEW BOOK")
+	hs.keys("Esc")
+	hs.lacks("NEW BOOK")
+	hs.contains("ITEM OPERATION")
+	hs.keys("n", "Enter", "Persuasion", "Enter", "j", "Enter", "Tab", "Austen", "Enter", "Enter", "Tab", "Enter")
+	hs.lacks("NEW BOOK", "ITEM OPERATION")
+	if r, _ := hs.d.popups.list.Current(); r.ID != "added-1" {
+		t.Fatalf("the cursor is on %s, not the new book", r.ID)
+	}
+}
 
 func TestPopupsChangedFormAsksBeforeEsc(t *testing.T) {
 	t.Parallel()

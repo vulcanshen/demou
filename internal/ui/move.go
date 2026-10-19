@@ -22,7 +22,9 @@ const authorsTab = 1
 
 func newMoveScreen(d *demou) *moveScreen {
 	m := &moveScreen{d: d}
-	m.shelves = &terminu.List{Columns: []terminu.Column{{Title: "Shelf", Flex: true}, {Title: "Books", Number: true}},
+	// The columns that do not fit go first to last by Drop; the name never
+	// (layout/panel).
+	m.shelves = &terminu.List{Columns: []terminu.Column{{Title: "Shelf"}, {Title: "Books", Number: true, Drop: 1}},
 		OnMove: func(terminu.Row) tea.Cmd { m.fill(); return nil }}
 	m.list = &terminu.List{EmptyFact: "No books on this shelf", EmptyHint: "Press [Space] to see what you can do here"}
 	m.books = &terminu.Panel{Label: "Books", Tabs: []string{"Authors"}, Body: m.list,
@@ -30,7 +32,7 @@ func newMoveScreen(d *demou) *moveScreen {
 	open := d.openBook(m.list)
 	open.Hidden = func() bool { return m.books.Tab == authorsTab }
 	m.books.Actions = []terminu.Action{open,
-		{Key: "Enter", Label: "Open", Desc: "who they were", Scope: terminu.ItemScope, Hint: "open", Stay: true,
+		{Key: "Enter", Label: "Open", Desc: "who they were", Scope: terminu.ItemScope, Hint: "open",
 			Hidden: func() bool { return m.books.Tab != authorsTab }, Do: m.openAuthor}}
 	shelves := &terminu.Panel{Label: "Shelves", Body: m.shelves, Details: m.books, Actions: []terminu.Action{
 		{Key: "Enter", Label: "Books", Desc: "the books on this shelf", Scope: terminu.ItemScope, Hint: "books",
@@ -73,7 +75,7 @@ func (m *moveScreen) fill() {
 	}
 	var rows []terminu.Row
 	if m.books.Tab == authorsTab {
-		m.list.Columns = []terminu.Column{{Title: "Name", Flex: true}, {Title: "Born", Number: true}, {Title: "Died", Number: true}}
+		m.list.Columns = []terminu.Column{{Title: "Name"}, {Title: "Born", Number: true, Drop: 2}, {Title: "Died", Number: true, Drop: 1}}
 		seen := map[string]bool{}
 		for _, b := range on {
 			if seen[b.author] {
@@ -84,7 +86,8 @@ func (m *moveScreen) fill() {
 			rows = append(rows, terminu.Row{ID: a.name, Cells: []string{a.name, strconv.Itoa(a.born), strconv.Itoa(a.died)}})
 		}
 	} else {
-		m.list.Columns = []terminu.Column{{Title: "Title", Flex: true}, {Title: "Author"}, {Title: "Year", Number: true}}
+		// A title and its author always show; at 80 columns the year goes.
+		m.list.Columns = []terminu.Column{{Title: "Title"}, {Title: "Author"}, {Title: "Year", Number: true, Drop: 1}}
 		for _, b := range on {
 			rows = append(rows, terminu.Row{ID: b.id, Cells: []string{b.title, b.author, b.yearText()}})
 		}
@@ -102,6 +105,5 @@ func (m *moveScreen) openAuthor() tea.Cmd {
 			lines = append(lines, b.title)
 		}
 	}
-	// TODO(lib DM25): a selection mode, as on the first page.
 	return m.d.a.Viewer(&terminu.Viewer{Title: "Author", Subject: a.name, Glyph: glyphAuthor, Lines: lines})
 }

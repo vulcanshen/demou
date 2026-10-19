@@ -13,29 +13,25 @@ type popupsScreen struct {
 	d      *demou
 	screen *terminu.Screen
 	list   *terminu.List
-	// removeAsk names the book under the cursor; it is read when Remove runs.
-	removeAsk *terminu.Ask
 }
 
 func newPopupsScreen(d *demou) *popupsScreen {
-	p := &popupsScreen{d: d, removeAsk: &terminu.Ask{Title: "Remove", Verb: "remove"}}
+	p := &popupsScreen{d: d}
 	p.list = &terminu.List{
-		Columns:   []terminu.Column{{Title: "Title", Flex: true}, {Title: "Author"}, {Title: "Shelf"}},
+		Columns:   []terminu.Column{{Title: "Title"}, {Title: "Author", Drop: 2}, {Title: "Shelf", Drop: 1}},
 		EmptyFact: "No books on the shelf", EmptyHint: "Press [n] to add a book",
-		OnMove: func(r terminu.Row) tea.Cmd {
-			p.removeAsk.Question = "Remove " + d.book(r.ID).title + " from the shelf?"
-			return nil
-		},
 	}
 	books := &terminu.Panel{Label: "Books", Body: p.list, Actions: []terminu.Action{
 		d.openBook(p.list),
-		{Key: "r", Label: "remove", Desc: "take it off the shelf", Scope: terminu.ItemScope, Hint: "remove", Ask: p.removeAsk,
+		// The question names the book under the cursor. Run from the Space
+		// menu, Esc on it goes back to the menu; once the book is gone the
+		// menu closes, there being nothing left for it (tdp T1).
+		{Key: "r", Label: "remove", Desc: "take it off the shelf", Scope: terminu.ItemScope, Hint: "remove",
+			AskFor: func() *terminu.Ask {
+				return &terminu.Ask{Title: "Remove", Verb: "remove",
+					Question: "Remove " + d.current(p.list).title + " from the shelf?"}
+			},
 			Do: func() tea.Cmd { d.remove(d.current(p.list)); return nil }},
-		// Run from the Space menu, the form closes the menu as it opens.
-		// TODO(lib DM38): keep the menu under the form, so that Esc goes back
-		// to it (tdp T1), and clear it once the book is added: the cursor is
-		// then on the new book, and the menu was about the one under it
-		// before. The lib can't clear a source after its target is done yet.
 		{Key: "n", Label: "new book", Desc: "put another book on the shelf", Scope: terminu.PanelScope, Hint: "new", Do: p.newBook},
 	}}
 	p.screen = &terminu.Screen{Name: "Popups", Key: "P", Desc: "popups over popups", Panels: []*terminu.Panel{books}}
@@ -51,7 +47,10 @@ func (p *popupsScreen) refresh() {
 }
 
 // newBook is the NEW BOOK form: a title typed in a text popup, an author
-// chosen in a select. Add puts the book on To read, the cursor on it.
+// chosen in a select. Add puts the book on To read, the cursor on it (tdp
+// K3). Run from the Space menu, the form opens over the menu and Esc goes
+// back to it (tdp T1); Add closes the menu with the form, the menu being
+// about the book that was under the cursor before.
 func (p *popupsScreen) newBook() tea.Cmd {
 	title, author := "", -1
 	names := make([]string, len(authors))
@@ -97,7 +96,7 @@ func (p *popupsScreen) newBook() tea.Cmd {
 		},
 		Submit: func() (tea.Cmd, error) {
 			p.list.Select(p.d.add(title, names[author]))
-			return nil, nil
+			return p.d.a.CloseAll(), nil
 		},
 	})
 }
