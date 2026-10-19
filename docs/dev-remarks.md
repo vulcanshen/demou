@@ -1,6 +1,6 @@
 # demou 開發者備忘
 
-demou 是家族的操作教學 app，遵循 [terminu design](https://github.com/vulcanshen/terminu) principle（tdp v0.7.4），
+demou 是家族的操作教學 app，遵循 [terminu design](https://github.com/vulcanshen/terminu) principle（tdp v0.8.0），
 畫面用 [terminu-go](https://github.com/vulcanshen/terminu-go)。
 
 ## 運作方式
@@ -37,7 +37,16 @@ demou 是家族的操作教學 app，遵循 [terminu design](https://github.com/
   不是書：`Enter` 打開作者的生卒年與書。在 demou 裡加的書沒有第一頁，Open 是停用色（tdp M6）。
 - **Remove 的問句帶書名**：`Action.Ask` 是登記時給的，問句卻要跟著 cursor 換。做法是 Ask 用一個指標，cursor 換書時（`List.OnMove`）
   改它的 `Question`。不在 `Do` 裡自己開 confirm：那樣從 Space menu 執行時 menu 會先關掉，`Esc` 回不到 menu（tdp F4）；而 demou
-  教的正是「`Esc` 一次關一層」。
+  教的正是「`Esc` 一次關一層」。接受之後 menu 一起收掉：刪除讓那一項不在了（tdp T1 的表）。
+- **從 Space menu 打開的書與作者，`Esc` 回到 menu**：Open 是「打開東西來看」，照 tdp T1 的表保留 source（`Action.Stay`）。
+- **從 Space menu 開 NEW BOOK，menu 跟著收掉（暫定）**：新增不在 tdp T1 的表上，由 app 推演。加好之後 cursor 停在新書上（tdp K3），
+  menu 的 item 區講的卻是原本 cursor 上那本書，留著只會對不上；所以表單打開時 menu 就收掉（v0.1.13 的 Action 沒有 `Stay` 就是這樣）。
+  代價是在表單上 `Esc` 取消時回到 panel，不回到 menu。已回報（DM38）。
+- **Title 是必填，在 text popup 就擋**：Title 的 text popup 有自己的檢查，空著按 `Enter` 寫出 `Title is required`、popup 不關（tdp K3）；
+  表單的 Add 也檢查一次，給沒打開過 Title 就按 Add 的人。
+- **最低尺寸 80×24（暫定）**：tdp L1 讓 app 把最低尺寸從預設的 80×40 調低。demou 選 80×24：新開的終端機視窗常常就是 80×24（macOS 的
+  Terminal 預設），看完影片想跟著按的人一打開就能用，不必先拉大視窗；demou 的畫面最多兩個 panel、popup 都不大，畫面測試在 80×24
+  跑過每一種 popup。比它小（例：40×12）時，等 lib 有最低尺寸，就只顯示名稱與 `needs a terminal of at least 80×24`。已回報（DM39）。
 - **`q` 先問**：`Quit demou?`，每個畫面都一樣（tdp K9：離開要不要先問由 app 決定）。popup 那一章要示範「`q` 離開前先問」
   （user 定的章節內容）；看完影片自己按的人，也不會一按 `q` 就離開、還沒按完的書架從頭來過。
 - **家族 mark**：user 用 kamonu 畫的，U 框裡上面 D、E，下面 M、O；`docs/icon.svg` 是 kamonu 匯出的檔，分字註解照 tdp S5
@@ -45,11 +54,9 @@ demou 是家族的操作教學 app，遵循 [terminu design](https://github.com/
 - **錄法**：YouTube 的影片用 vulaude 的 tape-video，一個畫面一章（三章），字幕寫在 tape 裡、錄的時候就畫在下方；尺寸與配色照 ccdrawu 的
   `_common.tape`（1920×960，字 18），剪進成員的影片時才一致。README 的 gif 照 tdp E6 用 VHS 錄（`make gif`）。user 原本選「VHS 錄、
   剪輯時加字幕」，看到 ccdrawu 已經用 tape-video 錄好 YouTube 之後改用它。
-- **viewer 沒有選取模式（暫定）**：第一頁與作者的 viewer 沒有 `v` 選取。tdp F1 寫 note「可以」有自己的模式（例：`v` 選取），
-  components/dialog/note 也寫 viewer「可以」把一段文字選起來複製；demou 只放主要操作需要的東西，選取模式不在三章裡，複製還要
-  另外接剪貼簿與 toast。清單把選取模式的條目算成每個 viewer 都適用，已回報（DM25）；定案前先不加。
-- **CHANGELOG 不寫 splash（暫定）**：tdp S 章開頭說 splash 只記載在 tdp，不寫進 app 的 README、menu、help；CHANGELOG 會變成
-  release notes，一樣是寫給使用者看的，所以也不寫。規範沒提 CHANGELOG，已回報（DM35）。
+- **兩個 viewer 都有選取模式**：tdp v0.8.0 定了每個 viewer 都有（tdp F1，DM25 的定案）；lib 下一版讓每個 viewer 預設就有，複製也由
+  lib 做（剪貼簿加 Success toast），demou 不另外接。v0.1.13 還沒有，寫在 `docs/demou-terminu-fix.md`。
+- **CHANGELOG 不寫 splash**：tdp S2：splash 不寫進 README、CHANGELOG 與 release notes（DM35 的定案）。
 - **License 是 GPL-3.0**：terminu-go 是 GPL-3.0。
 
 ## 已否決，不要重提
@@ -64,9 +71,14 @@ demou 是家族的操作教學 app，遵循 [terminu design](https://github.com/
 
 ## 已知的牆與未做
 
-- 尚未符合 tdp 的地方逐條寫在 `docs/demou-terminu-fix.md`（tdp E7）：照 tdp v0.7.4 的清單對過，剩下的都出在 terminu-go v0.1.13
-  的行為（DM4–DM9、DM11–DM14），程式裡的 `TODO(lib DM4)`、`TODO(lib DM5)` 是 lib 修好之後測試要補的尺寸。
+- 尚未符合 tdp 的地方逐條寫在 `docs/demou-terminu-fix.md`（tdp E7）：照 tdp v0.7.4 的清單對過，再照 v0.8.0 改了的地方對過，
+  剩下的都出在 terminu-go v0.1.13 的行為，等 lib 下一版。程式裡的 TODO：
+  - `TODO(lib DM4)`：最低尺寸以下到 1×1 的測試（tdp E5、L1）。
+  - `TODO(lib DM7)`：空的 Title 按 `Enter` 的測試。v0.1.13 會擋；本機還沒發版的 lib 把它當成「值沒改」直接關，等 lib 照 tdp v0.8.0 的
+    K3 改回來，兩邊都擋了才加測試（`make check` 兩邊都要過）。
+  - `TODO(lib DM25)`：兩個 viewer 的選取模式。
 - 規範的盲點、lib 要補的、清單的問題回報給 terminu 的 session（DM4 起），由它記進紀錄（`terminu 的筆記`）。
+  DM4–DM37 都在 tdp v0.8.0 定了。
 - 之前的 DM1–DM3，tdp v0.7.1 都定了：
   - DM1：`docs/icon.svg` 怎麼 embed。規範照 demou 的做法寫進 tdp E6 與 project 的「目錄」（見上面的「運作方式」）。
   - DM2：viewer 在字的中間折行。規範定了（components 的「折行」：在空白處斷），terminu-go v0.1.13 跟上了；demou 原本先用
@@ -90,10 +102,10 @@ demou 是家族的操作教學 app，遵循 [terminu design](https://github.com/
 - 本機用 `go.work` 指著 `../terminu-go`（git 不收）。`make check` 有 `go.work` 時會再關掉它、照 `go.mod` 的版本跑一次
   （`check-lib`）：過不了，就是用到了 lib 還沒發版的東西。
 - **測試**（`internal/ui`）：`harness_test.go` 不開終端機跑 demou，送按鍵、跑完動畫、把畫面當文字讀出來（照 kamonu 的 harness）。
-  - tdp L4 的畫面測試：5 種尺寸 × 每個畫面與每一種 popup，再加「打開之後把終端機縮小」，讓 popup 比畫面寬、比畫面高、兩邊都大
-    （tdp E5）；icon 與 powerline 符號一格、icon 兩格、兩種都兩格各跑一輪。
-  - 每一種 popup 也單獨量它自己的框（tdp E5）：terminu-go 沒有拿單一 popup 的 API，所以 harness 從整個畫面找出置中的粗線框，
-    取最裡面那一個，看每一列的右框都在同一格（`popupBox`）。popup 比畫面大、被切掉時不量；10 列以下也還不量（`TODO(lib DM5)`）。
+  - tdp L4 的畫面測試：5 種尺寸 × 每個畫面與每一種 popup（含疊在別的 popup 上的），再加「打開之後把終端機縮小」，讓 popup 比畫面寬、
+    比畫面高、兩邊都大（tdp E5）；icon 與 powerline 符號一格、icon 兩格、兩種都兩格各跑一輪。
+  - 只測整個畫面：單獨量每一種 popup 的框是 lib 的事，popup 是 lib 畫的（tdp E8）。以前 harness 從畫面找出 popup 的框來量
+    （`popupBox`），tdp v0.8.0 定了分工之後拿掉。
   - 動畫在測試裡也是真的時間（一個 popup 288ms，lib 沒有關掉的開關），所以畫面測試平行跑；一輪 `go test` 約 40 秒。icon 寬度是
     lib 的全域設定，只在兩輪之間、沒有測試在跑時改。
 - **錄影**：

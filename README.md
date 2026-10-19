@@ -29,6 +29,7 @@ every start is the same shelf of twenty classics.
 - macOS or Linux (WSL too).
 - A [Nerd Font](https://www.nerdfonts.com) terminal profile: the icons and the frames are Nerd Font glyphs.
 - A truecolor (24-bit) terminal: the faded colours and the layer colours cannot be told apart in 256 colours.
+- A terminal at least 80 columns wide and 24 rows high.
 
 demou measures how many cells an icon and a powerline symbol take when it starts. When it gets them wrong, set them:
 
@@ -102,7 +103,7 @@ The keys every family app shares:
 | `?` | Every key that works here |
 | `Tab`, `1`–`9` | The next panel; jump to a panel by its number |
 | `j\|k`, `h\|l` | Move; `h\|l` switch tabs; past the last one you are back at the first |
-| `gg`, `G` | To the top, to the bottom |
+| `gg\|G` | To the top, to the bottom |
 | `Enter` | The obvious thing: here, open the book at its first page |
 | `Esc` | Close the popup on top, one at a time; it never leaves demou |
 | `q` | Quit, after asking |

@@ -26,6 +26,7 @@ terminu 家族的每一個 app 操作都一樣：同一組鍵用來移動、找�
 - macOS 或 Linux（WSL 也可以）。
 - [Nerd Font](https://www.nerdfonts.com) 的終端機設定檔：icon 與框線都是 Nerd Font 的字。
 - truecolor（24-bit 色）的終端機：淡化的顏色與層色在 256 色下分不出來。
+- 至少 80 欄寬、24 列高的終端機。
 
 demou 啟動時會量 icon 與 powerline 符號佔幾格。量錯時自己設：
 
@@ -98,7 +99,7 @@ demou help       印出命令列的用法（-h、--help）
 | `?` | 這裡能按的每一個鍵 |
 | `Tab`、`1`–`9` | 下一個 panel；照編號跳到某個 panel |
 | `j\|k`、`h\|l` | 移動；`h\|l` 切 tab；走過最後一個就回到第一個 |
-| `gg`、`G` | 到最上面、到最下面 |
+| `gg\|G` | 到最上面、到最下面 |
 | `Enter` | 最直觀的那件事：在這裡是打開那本書的第一頁 |
 | `Esc` | 關掉最上層的 popup，一次一層；不會離開 demou |
 | `q` | 離開，先問 |
