@@ -45,8 +45,10 @@ func (s *actionsScreen) sort() tea.Cmd {
 	s.byYear = !s.byYear
 	if s.byYear {
 		s.list.SortBy(terminu.SortKey{Col: yearCol})
+		s.d.a.Log(terminu.Info, "Books sorted by year")
 	} else {
 		s.list.SortBy(terminu.SortKey{Col: 0})
+		s.d.a.Log(terminu.Info, "Books sorted by title")
 	}
 	return nil
 }

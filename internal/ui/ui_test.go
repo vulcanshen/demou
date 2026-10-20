@@ -29,6 +29,7 @@ var states = []struct {
 	{"an author", []string{"Tab", "l", "Enter"}},
 	{"ACTIONS", []string{"A"}},
 	{"ACTIONS, Space menu", []string{"A", "Space"}},
+	{"App Log", []string{"A", "b", "s", "!"}},
 	{"POPUPS", []string{"P"}},
 	{"first page over the Space menu", []string{"P", "Space", "Enter"}},
 	{"remove confirm", []string{"P", "r"}},
@@ -154,6 +155,9 @@ func TestL1BelowTheLeastSize(t *testing.T) {
 // starts: what is recorded once looks the same again.
 func TestSameEveryStart(t *testing.T) {
 	for _, st := range states {
+		if slices.Contains(st.keys, "!") {
+			continue // the App Log writes the time of each entry
+		}
 		t.Run(st.name, func(t *testing.T) {
 			t.Parallel()
 			a, b := newHarness(t, 80, 40), newHarness(t, 80, 40)
@@ -245,6 +249,15 @@ func TestActionsSpaceMenu(t *testing.T) {
 	hs.contains("ITEM OPERATION")
 	hs.keys("Esc")
 	hs.lacks("ITEM OPERATION")
+}
+
+// What is done to the bookshelf goes in the App Log, which ! opens (tdp F5).
+func TestAppLogKeepsWhatWasDone(t *testing.T) {
+	t.Parallel()
+	hs := newHarness(t, 80, 40)
+	hs.contains("!:log")
+	hs.keys("A", "b", "s", "!")
+	hs.contains("OK   A Tale of Two Cities moved to Reading", "INFO Books sorted by year")
 }
 
 func TestActionsSort(t *testing.T) {

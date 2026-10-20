@@ -91,14 +91,18 @@ func (d *demou) current(l *terminu.List) *book {
 	return d.book(r.ID)
 }
 
+// moveTo, remove and add change the bookshelf, each change going in the App
+// Log (tdp F5), which ! opens.
 func (d *demou) moveTo(b *book, shelf string) {
 	b.shelf = shelf
 	d.refresh()
+	d.a.Log(terminu.Success, b.title+" moved to "+shelf)
 }
 
 func (d *demou) remove(b *book) {
 	d.books = slices.DeleteFunc(d.books, func(o *book) bool { return o == b })
 	d.refresh()
+	d.a.Log(terminu.Success, b.title+" taken off the shelf")
 }
 
 // add puts a new book on To read and returns its ID.
@@ -107,6 +111,7 @@ func (d *demou) add(title, author string) string {
 	b := &book{id: "added-" + strconv.Itoa(d.added), title: title, author: author, shelf: toRead}
 	d.books = append(d.books, b)
 	d.refresh()
+	d.a.Log(terminu.Success, title+" by "+author+" put on "+toRead)
 	return b.id
 }
 
