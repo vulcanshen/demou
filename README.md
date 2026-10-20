@@ -18,7 +18,7 @@ every start is the same shelf of twenty classics.
 
 - **Three screens, one lesson each**: `[M]ove` to look around and move, `[A]ctions` to find what you can do, `[P]opups` for
   popups over popups.
-- **What you learn works in every family app**: the same `Space`, `?`, `Tab`, `Enter` and `Esc` in kbu, filu, sshu and the
+- **What you learn works in every family app**: the same `Space`, `?`, `!`, `Tab`, `Enter` and `Esc` in kbu, filu, sshu and the
   rest.
 - **Safe to press anything**: the books are made up for practice and live only while demou runs; it never touches your files.
 
@@ -106,6 +106,7 @@ The keys every family app shares:
 |---|---|
 | `Space` | What you can do here: on this item, on this panel, and for the whole app |
 | `?` | Every key that works here |
+| `!` | The App Log: what was done, newest last; here, the books moved, removed, added and sorted |
 | `Tab`, `1`–`9` | The next panel; jump to a panel by its number |
 | `j\|k`, `h\|l` | Move; `h\|l` switch tabs; past the last one you are back at the first |
 | `gg\|G` | To the top, to the bottom |

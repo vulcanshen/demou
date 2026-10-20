@@ -1,13 +1,14 @@
 # demou 開發者備忘
 
-demou 是家族的操作教學 app，遵循 [terminu design](https://github.com/vulcanshen/terminu) principle（tdp v0.8.3），
-畫面用 [terminu-go](https://github.com/vulcanshen/terminu-go)（v0.2.2）。
+demou 是家族的操作教學 app，遵循 [terminu design](https://github.com/vulcanshen/terminu) principle（tdp v0.9.1），
+畫面用 [terminu-go](https://github.com/vulcanshen/terminu-go)（v0.4.2）。
 
 ## 運作方式
 
 - `cmd/demou/main.go` 先看命令列：`version`、`help`（tdp E1）；沒有參數時開 `internal/ui` 做好的 terminu-go `App`。
 - `internal/ui`：三個畫面（`move.go`、`actions.go`、`popups.go`）看的是同一個書架（`books.go`）。書架只在記憶體裡：書搬了、
-  拿掉了、加了，`refresh` 把三個畫面的清單一起重畫。什麼都不存，每次啟動都是同一份。
+  拿掉了、加了，`refresh` 把三個畫面的清單一起重畫，並記進 App Log（`App.Log`）。什麼都不存，每次啟動都是同一份；所以 tdp E3 的
+  「讀不了時」（`MoveAside`）與「換了位置時」都用不到。
 - splash 畫 `internal/ui/icon.svg`，它是 `docs/icon.svg`（正本）的副本：`go:embed` 讀不到 `docs/`，測試守住兩份一樣
   （tdp E6、project 的「目錄」）。換 mark 時兩份一起換。
 - 版本在 `internal/version`（tdp project 的範本）：本機 build 是 `dev`，goreleaser 發版時注入 tag 去掉 v 的版號。
@@ -63,6 +64,11 @@ demou 是家族的操作教學 app，遵循 [terminu design](https://github.com/
 - **兩個 viewer 都有選取模式**：每個 viewer 都有（tdp F1，DM25 的定案）。用 lib 預設的：`v` 選取、`y` 複製到終端機的剪貼簿
   （OSC 52）、跳 Success toast，demou 不另外設。demou 自己沒有綁 `v`（splash 是 `V`）。
 - **CHANGELOG 不寫 splash**：tdp S2：splash 不寫進 README、CHANGELOG 與 release notes（DM35 的定案）。
+- **App Log 記什麼**：書架上的每一個改變 —— 書搬到哪個書架、拿掉、加進來（`OK`），清單換了排法（`INFO`）。toast 與 error popup
+  由 lib 自己記。換畫面、打開第一頁這種只是看的動作不記：App Log 是「做過的事」，記了只會把搬過的書淹掉。
+- **App Log 放在第 2 章（暫定）**：章節的內容是 user 定的，`!` 是 tdp v0.9.0 才加的 core key。放在第 2 章「找動作」：它跟 `Space`、`?`
+  一樣是「去哪裡看」的鍵，第 2 章剛做過 `[b]egin`、`[f]inish`，按 `!` 就看得到剛剛做的事；footer 的 `!:log` 每一章都在，第 1、3 章
+  不另外講。程式不用為此改；錄影時（等 tdp、terminu-go stable 再錄）在 `02-actions.tape` 加這一段。已回報（DM40）。
 - **License 是 GPL-3.0**：terminu-go 是 GPL-3.0。
 
 ## 已否決，不要重提
@@ -77,7 +83,7 @@ demou 是家族的操作教學 app，遵循 [terminu design](https://github.com/
 
 ## 已知的牆與未做
 
-- 沒有尚未符合 tdp 的地方，所以沒有 `docs/demou-terminu-fix.md`（tdp E7）：照 tdp v0.7.4 的清單對過，再照 v0.8.0 到 v0.8.3 改了的
+- 沒有尚未符合 tdp 的地方，所以沒有 `docs/demou-terminu-fix.md`（tdp E7）：照 tdp v0.7.4 的清單對過，再照 v0.8.0 到 v0.9.1 改了的
   地方對過；剩下的都出在 terminu-go v0.1.13，v0.2.0 都修好了。程式裡沒有 `TODO(tdp …)`、`TODO(lib …)`。
 - 規範的盲點、lib 要補的、清單的問題回報給 terminu 的 session（DM4 起），由它記進紀錄（`terminu 的筆記`）。
   DM4–DM39 都定了。
@@ -100,7 +106,7 @@ demou 是家族的操作教學 app，遵循 [terminu design](https://github.com/
 
 - `make`（或 `make help`）列出所有指令；家族共用的 target 在 `family.mk`，app 自己的放在 `Makefile` 的最後一段。
 - project 目錄圖以外的頂層檔案只有 `CLAUDE.md`：給 AI 協作的說明（demou 是什麼、規範在哪、盲點怎麼記、跟 user 合作的方式），
-  由 terminu 的 session 寫。
+  多半由 terminu 的 session 寫；指示檔只有 demou、terminu、terminu-go 三個 session 可以改（CLAUDE.md 寫的 user 2026-10-20 規矩）。
 - 本機用 `go.work` 指著 `../terminu-go`（git 不收）。`make check` 有 `go.work` 時會再關掉它、照 `go.mod` 的版本跑一次
   （`check-lib`）：過不了，就是用到了 lib 還沒發版的東西。
 - **測試**（`internal/ui`）：`harness_test.go` 不開終端機跑 demou，送按鍵、跑完動畫、把畫面當文字讀出來（照 kamonu 的 harness）。
@@ -110,6 +116,10 @@ demou 是家族的操作教學 app，遵循 [terminu design](https://github.com/
   - 比最低尺寸小時（tdp L1）：只有名稱與提示（放得下時），按鍵不作用、拉大後回到原本的畫面，連按兩次 `Ctrl-C` 離開。
   - 只測整個畫面：單獨量每一種 popup 的框是 lib 的事，popup 是 lib 畫的（tdp E8）。以前 harness 從畫面找出 popup 的框來量
     （`popupBox`），tdp v0.8.0 定了分工之後拿掉。
+  - `tdp_test.go`：lib 給的家族共同檢查（`tdptest.Check`）。在很多尺寸與三種 icon 寬度第一次啟動 demou，每個畫面、每個 panel 打開
+    Space menu、global operation popup、App Log、`?`，再一層一層 `Esc` 關掉，最後縮到最低尺寸以下再拉大；每個 frame 驗 tdp L4、
+    有沒有控制字元原樣送到終端機。它跑在測試的時間上，不能跟別的測試平行跑；`go test -short` 只跑最低尺寸與 80×24。
+  - App Log 每一筆帶時間，「每次啟動都一樣」的測試不比開著 App Log 的畫面。
   - 動畫在測試裡也是真的時間（一個 popup 288ms，lib 沒有關掉的開關），所以畫面測試平行跑；一輪 `go test` 約 40 秒。icon 寬度是
     lib 的全域設定，只在兩輪之間、沒有測試在跑時改。
 - **錄影**：
