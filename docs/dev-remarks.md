@@ -1,14 +1,14 @@
 # demou 開發者備忘
 
-demou 是家族的操作教學 app，遵循 [terminu design](https://github.com/vulcanshen/terminu) principle（tdp v0.9.1），
-畫面用 [terminu-go](https://github.com/vulcanshen/terminu-go)（v0.4.2）。
+demou 是家族的操作教學 app，遵循 [terminu design](https://github.com/vulcanshen/terminu) principle（tdp v0.9.3），
+畫面用 [terminu-go](https://github.com/vulcanshen/terminu-go)（v0.4.4）。
 
 ## 運作方式
 
 - `cmd/demou/main.go` 先看命令列：`version`、`help`（tdp E1）；沒有參數時開 `internal/ui` 做好的 terminu-go `App`。
 - `internal/ui`：三個畫面（`move.go`、`actions.go`、`popups.go`）看的是同一個書架（`books.go`）。書架只在記憶體裡：書搬了、
   拿掉了、加了，`refresh` 把三個畫面的清單一起重畫，並記進 App Log（`App.Log`）。什麼都不存，每次啟動都是同一份；所以 tdp E3 的
-  「讀不了時」（`MoveAside`）與「換了位置時」都用不到。
+  「讀不了時」（`MoveAside`）、「換了位置時」與「不再用的檔」（`NoLongerUsed`）都用不到。
 - splash 畫 `internal/ui/icon.svg`，它是 `docs/icon.svg`（正本）的副本：`go:embed` 讀不到 `docs/`，測試守住兩份一樣
   （tdp E6、project 的「目錄」）。換 mark 時兩份一起換。
 - 版本在 `internal/version`（tdp project 的範本）：本機 build 是 `dev`，goreleaser 發版時注入 tag 去掉 v 的版號。
@@ -65,7 +65,9 @@ demou 是家族的操作教學 app，遵循 [terminu design](https://github.com/
   （OSC 52）、跳 Success toast，demou 不另外設。demou 自己沒有綁 `v`（splash 是 `V`）。
 - **CHANGELOG 不寫 splash**：tdp S2：splash 不寫進 README、CHANGELOG 與 release notes（DM35 的定案）。
 - **App Log 記什麼**：書架上的每一個改變 —— 書搬到哪個書架、拿掉、加進來（`OK`），清單換了排法（`INFO`）。toast 與 error popup
-  由 lib 自己記。換畫面、打開第一頁這種只是看的動作不記：App Log 是「做過的事」，記了只會把搬過的書淹掉。
+  由 lib 自己記。換畫面、打開第一頁這種只是看的動作不記：App Log 是「做過的事」，記了只會把搬過的書淹掉。每一筆動詞在前、
+  書名照使用者打的（`Moved <書名> to <書架>`、`Took <書名> off the shelf`、`Put <書名> by <作者> on To read`）：NEW BOOK 加的書
+  可能小寫開頭，這樣每一筆還是跟 toast 一樣大寫開頭（note-78）；lib 不替 app 改第一個字，因為開頭可能是名稱。
 - **App Log 放在第 2 章**：章節的內容是 user 定的，`!` 是 tdp v0.9.0 才加的 core key。放在第 2 章「找動作」：它跟 `Space`、`?`
   一樣是「去哪裡看」的鍵，第 2 章剛做過 `[b]egin`、`[f]inish`，按 `!` 就看得到剛剛做的事；footer 的 `!:log` 每一章都在，第 1、3 章
   不另外講。程式不用為此改；錄影時（等 tdp、terminu-go stable 再錄）在 `02-actions.tape` 加這一段。原本是暫定（DM40），user
@@ -84,10 +86,10 @@ demou 是家族的操作教學 app，遵循 [terminu design](https://github.com/
 
 ## 已知的牆與未做
 
-- 沒有尚未符合 tdp 的地方，所以沒有 `docs/demou-terminu-fix.md`（tdp E7）：照 tdp v0.7.4 的清單對過，再照 v0.8.0 到 v0.9.1 改了的
+- 沒有尚未符合 tdp 的地方，所以沒有 `docs/demou-terminu-fix.md`（tdp E7）：照 tdp v0.7.4 的清單對過，再照 v0.8.0 到 v0.9.3 改了的
   地方對過；剩下的都出在 terminu-go v0.1.13，v0.2.0 都修好了。程式裡沒有 `TODO(tdp …)`、`TODO(lib …)`。
 - 規範的盲點、lib 要補的、清單的問題回報給 terminu 的 session（DM4 起），由它記進紀錄（`terminu 的筆記`）。
-  DM4–DM39 都定了。
+  DM4–DM40 都定了。
 - 之前的 DM1–DM3，tdp v0.7.1 都定了：
   - DM1：`docs/icon.svg` 怎麼 embed。規範照 demou 的做法寫進 tdp E6 與 project 的「目錄」（見上面的「運作方式」）。
   - DM2：viewer 在字的中間折行。規範定了（components 的「折行」：在空白處斷），terminu-go v0.1.13 跟上了；demou 原本先用
