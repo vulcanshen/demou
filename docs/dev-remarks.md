@@ -66,9 +66,10 @@ demou 是家族的操作教學 app，遵循 [terminu design](https://github.com/
 - **CHANGELOG 不寫 splash**：tdp S2：splash 不寫進 README、CHANGELOG 與 release notes（DM35 的定案）。
 - **App Log 記什麼**：書架上的每一個改變 —— 書搬到哪個書架、拿掉、加進來（`OK`），清單換了排法（`INFO`）。toast 與 error popup
   由 lib 自己記。換畫面、打開第一頁這種只是看的動作不記：App Log 是「做過的事」，記了只會把搬過的書淹掉。
-- **App Log 放在第 2 章（暫定）**：章節的內容是 user 定的，`!` 是 tdp v0.9.0 才加的 core key。放在第 2 章「找動作」：它跟 `Space`、`?`
+- **App Log 放在第 2 章**：章節的內容是 user 定的，`!` 是 tdp v0.9.0 才加的 core key。放在第 2 章「找動作」：它跟 `Space`、`?`
   一樣是「去哪裡看」的鍵，第 2 章剛做過 `[b]egin`、`[f]inish`，按 `!` 就看得到剛剛做的事；footer 的 `!:log` 每一章都在，第 1、3 章
-  不另外講。程式不用為此改；錄影時（等 tdp、terminu-go stable 再錄）在 `02-actions.tape` 加這一段。已回報（DM40）。
+  不另外講。程式不用為此改；錄影時（等 tdp、terminu-go stable 再錄）在 `02-actions.tape` 加這一段。原本是暫定（DM40），user
+  2026-10-21 定案。
 - **License 是 GPL-3.0**：terminu-go 是 GPL-3.0。
 
 ## 已否決，不要重提
