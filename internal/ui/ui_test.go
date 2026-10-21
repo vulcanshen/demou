@@ -257,7 +257,17 @@ func TestAppLogKeepsWhatWasDone(t *testing.T) {
 	hs := newHarness(t, 80, 40)
 	hs.contains("!:log")
 	hs.keys("A", "b", "s", "!")
-	hs.contains("OK   A Tale of Two Cities moved to Reading", "INFO Books sorted by year")
+	hs.contains("OK   Moved A Tale of Two Cities to Reading", "INFO Books sorted by year")
+}
+
+// An entry starts with its verb, so a title typed in lowercase stays as typed
+// and the entry still starts with a capital (note-78).
+func TestAppLogStartsWithACapital(t *testing.T) {
+	t.Parallel()
+	hs := newHarness(t, 80, 40)
+	hs.keys("P", "n", "Enter", "persuasion", "Enter", "j", "Enter", "Tab", "Austen", "Enter", "Enter", "Tab", "Enter")
+	hs.keys("r", "Enter", "!")
+	hs.contains("OK   Put persuasion by Jane Austen on To read", "OK   Took persuasion off the shelf")
 }
 
 func TestActionsSort(t *testing.T) {
