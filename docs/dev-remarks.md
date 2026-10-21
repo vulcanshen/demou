@@ -127,7 +127,7 @@ demou 是家族的操作教學 app，遵循 [terminu design](https://github.com/
     lib 的全域設定，只在兩輪之間、沒有測試在跑時改。
 - **錄影**：
   - README 的 gif：`make gif`（`.local/demos/demo.tape` → `docs/demo.gif`）。
-  - YouTube 的影片：`node tape-video.mjs .local/demos/youtube [章號…]`，
+  - YouTube 的影片：`node ~/.claude/skills/tape-video/scripts/tape-video.mjs .local/demos/youtube [章號…]`，
     在 repo 根目錄跑。三個 tape（`01-move`、`02-actions`、`03-popups`）各自先 `make build`，在 tape-video 的 tmux 裡開 demou；給了章號就只
     重錄那幾章。成品在 `.local/demos/youtube/out/`（`video.mp4`、`chapters.txt`、`sheet.png`）。
   - 字幕寫成 `# caption: …`，接著 `Ctrl+B`、`Type "]"` 切換；`[鍵]` 畫成鍵帽，所以字幕裡不是鍵的字不能加方括號。
