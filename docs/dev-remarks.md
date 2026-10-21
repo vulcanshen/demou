@@ -58,7 +58,7 @@ demou 是家族的操作教學 app，遵循 [terminu design](https://github.com/
   （user 定的章節內容）；看完影片自己按的人，也不會一按 `q` 就離開、還沒按完的書架從頭來過。
 - **家族 mark**：user 用 kamonu 畫的，U 框裡上面 D、E，下面 M、O；`docs/icon.svg` 是 kamonu 匯出的檔，分字註解照 tdp S5
   （U D E M O）。tdp S5 要每個成員有自己的 mark，kamonu 是家族畫 mark 的工具，所以由 user 用它畫。
-- **錄法**：YouTube 的影片用 vulaude 的 tape-video，一個畫面一章（三章），字幕寫在 tape 裡、錄的時候就畫在下方；尺寸與配色照 ccdrawu 的
+- **錄法**：YouTube 的影片用 tape-video（全域 skill），一個畫面一章（三章），字幕寫在 tape 裡、錄的時候就畫在下方；尺寸與配色照 ccdrawu 的
   `_common.tape`（1920×960，字 18），剪進成員的影片時才一致。README 的 gif 照 tdp E6 用 VHS 錄（`make gif`）。user 原本選「VHS 錄、
   剪輯時加字幕」，看到 ccdrawu 已經用 tape-video 錄好 YouTube 之後改用它。
 - **兩個 viewer 都有選取模式**：每個 viewer 都有（tdp F1，DM25 的定案）。用 lib 預設的：`v` 選取、`y` 複製到終端機的剪貼簿
