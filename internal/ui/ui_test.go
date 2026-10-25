@@ -187,7 +187,9 @@ func TestMoveShelvesShowTheirBooks(t *testing.T) {
 func TestMoveTabsAndPanels(t *testing.T) {
 	t.Parallel()
 	hs := newHarness(t, 80, 40)
-	hs.keys("2", "l")
+	hs.keys("2")
+	hs.contains("Enter:open h|l:tab") // right after Enter (tdp layout/panel)
+	hs.keys("l")
 	hs.contains("NAME", "BORN", "DIED", "Jane Austen", "1775", "1817")
 	hs.lacks("Pride and Prejudice")
 	hs.keys("l") // past the last tab, back to BOOKS
@@ -448,7 +450,11 @@ func TestQuitAsksFirst(t *testing.T) {
 	if hs.quit {
 		t.Fatal("Esc quit")
 	}
-	hs.keys("q", "Enter")
+	hs.keys("Space", "q") // over a popup too, and Esc goes back to it (tdp K9)
+	hs.contains("Quit demou?")
+	hs.keys("Esc")
+	hs.contains("ITEM OPERATION")
+	hs.keys("Esc", "q", "Enter")
 	if !hs.quit {
 		t.Fatal("Enter did not quit")
 	}
