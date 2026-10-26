@@ -188,7 +188,7 @@ func TestMoveTabsAndPanels(t *testing.T) {
 	t.Parallel()
 	hs := newHarness(t, 80, 40)
 	hs.keys("2")
-	hs.contains("Enter:open h|l:tab") // right after Enter (tdp layout/panel)
+	hs.contains("Enter:open h|l:tab") // right after Enter (tdp panel.1)
 	hs.keys("l")
 	hs.contains("NAME", "BORN", "DIED", "Jane Austen", "1775", "1817")
 	hs.lacks("Pride and Prejudice")
@@ -206,8 +206,7 @@ func TestMoveOpenAnAuthor(t *testing.T) {
 	hs.contains("AUTHOR — Jane Austen", "Jane Austen, 1775–1817.", "Pride and Prejudice", "Emma")
 }
 
-// A first page folds between words, never inside one (tdp components,
-// "Wrapping").
+// A first page folds between words, never inside one (tdp components.3).
 func TestFirstPageFoldsBetweenWords(t *testing.T) {
 	t.Parallel()
 	hs := newHarness(t, 80, 40)
@@ -263,7 +262,7 @@ func TestAppLogKeepsWhatWasDone(t *testing.T) {
 }
 
 // An entry starts with its verb, so a title typed in lowercase stays as typed
-// and the entry still starts with a capital (note-78).
+// and the entry still starts with a capital (tdp note.7).
 func TestAppLogStartsWithACapital(t *testing.T) {
 	t.Parallel()
 	hs := newHarness(t, 80, 40)

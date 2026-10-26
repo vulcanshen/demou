@@ -24,7 +24,7 @@ func newMoveScreen(d *demou) *moveScreen {
 	m := &moveScreen{d: d}
 	// Names (titles, authors) shrink to share the room; short values keep
 	// their width. Columns that still do not fit go by Drop, the name never
-	// (layout/panel).
+	// (tdp panel.5).
 	m.shelves = &terminu.List{Columns: []terminu.Column{{Title: "Shelf"}, {Title: "Books", Number: true, Drop: 1}},
 		OnMove: func(terminu.Row) tea.Cmd { m.fill(); return nil }}
 	m.list = &terminu.List{EmptyFact: "No books on this shelf", EmptyHint: "Press [Space] to see what you can do here"}
