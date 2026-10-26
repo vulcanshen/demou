@@ -262,7 +262,7 @@ func TestAppLogKeepsWhatWasDone(t *testing.T) {
 }
 
 // An entry starts with its verb, so a title typed in lowercase stays as typed
-// and the entry still starts with a capital (tdp note.7).
+// and the entry still starts with a capital (tdp toast.2).
 func TestAppLogStartsWithACapital(t *testing.T) {
 	t.Parallel()
 	hs := newHarness(t, 80, 40)
