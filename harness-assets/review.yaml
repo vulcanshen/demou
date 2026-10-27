@@ -1,4 +1,4 @@
-spec: 2
+spec: 3
 tasks:
   - id: 1
     accepted: true
@@ -17,8 +17,7 @@ tasks:
   - id: 8
     accepted: true
   - id: 9
-    accepted: false
-    reason: tdp 不清楚：[1] SHELVES 上的 Enter（Space menu item 區的 Books，照 tdp panel.13 把 focus 送到明細）要不要記，tdp note.7 兩處答案不同：「動作是哪些：Rules P3 的 item、panel、global operation，不管是從 menu、letter hotkey 還是 Enter 執行的」說要記；「移動 cursor、換 focus（Tab、數字鍵）……不是動作，不記」的括號裡沒寫用 Enter 進明細算哪一邊
+    accepted: true
   - id: 10
     accepted: true
   - id: 11
