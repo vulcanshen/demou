@@ -91,7 +91,7 @@ tasks:
   - id: 15
     spec: 1
     request: 'demou 的 mark：docs/icon.svg'
-    tdp: [tdp S1, tdp S2, tdp S3, tdp S4, tdp S5, tdp E6]
+    tdp: [tdp S1, tdp S2, tdp S3, tdp S4, tdp S5, tdp E6, tdp project.4]
     remark:
       - 'splash 畫 demou 的 mark；README 不寫 splash（tdp S2）'
   - id: 16
