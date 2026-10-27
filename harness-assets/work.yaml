@@ -151,7 +151,7 @@ tasks:
       照 tdp 的 project 範本：family.mk、.github/workflows/release.yml、.goreleaser.yaml（只出 linux、darwin）、install.sh（裝到 ~/.local/bin，不用 sudo）、
       uninstall.sh、internal/version、.gitignore
       Homebrew 走 vulcanshen/tap；go install github.com/vulcanshen/demou/cmd/demou@latest
-      README 寫 Nerd Font、truecolor、80×24 的需求
+      README 寫 Nerd Font、truecolor、60×24 的需求
       tgo 的 tdptest 在 TestTDP/repo 比對 project 的範本檔
       還沒發過版（git 沒有 tag）：Homebrew 與安裝腳本要等第一次發版才裝得到
     test: [TestTDP/repo]

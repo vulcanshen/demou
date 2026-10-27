@@ -5,7 +5,7 @@ tasks:
   - id: 1
     spec: 2
     request: '三個畫面，一個畫面一課：[M]ove 看與移動、[A]ctions 找動作、[P]opups popup 疊 popup；按 M、A、P 換畫面，啟動時打開 [M]ove'
-    tdp: [tdp terms.2, tdp screen.1, tdp screen.3, tdp screen.5, tdp screen.8, tdp panel.5, tdp P5, tdp M4, tdp M5, tdp K12, tdp L1, tdp L4]
+    tdp: [tdp terms.2, tdp screen.1, tdp screen.3, tdp screen.4, tdp screen.5, tdp screen.8, tdp panel.5, tdp P5, tdp M4, tdp M5, tdp K12, tdp L1, tdp L4, tdp E5]
     remark:
       - '畫面 chip 列上三個畫面；M、A、P 是領域熱鍵（tdp P5），不佔移動的字母（tdp K12）'
       - '一個畫面練一部分操作，三個畫面共用同一個書架（README 的特色）'
@@ -55,11 +55,13 @@ tasks:
   - id: 9
     spec: 2
     request: '! 打開 App Log：做過的事，最新的在最下面；在這裡是換過的畫面、打開過的第一頁與作者，以及搬、拿掉、加進來、排序過的書'
-    tdp: [tdp K1, tdp F5, tdp M1, tdp P3, tdp note.7, tdp toast.2]
+    tdp: [tdp K1, tdp F5, tdp M1, tdp P3, tdp note.7, tdp toast.2, tdp panel.13]
     remark:
       - '記什麼照 tdp note.7（DM41 回報後 tdp v0.11.0 定的）：tdp P3 的三種 operation 都記，只看不改的也記（打開第一頁、作者）；換畫面由 lib 記'
       - '不記的（tdp note.7）：移動 cursor（j|k 換書架，明細跟著換）、換 focus（[1] SHELVES 上的 Enter 只把 focus 移到 [2]）、Space menu、?、!、在 confirm 或表單按 Esc 取消的動作'
       - '打開與排序記 Info，改到書架的記 Success（tdp toast.2：做完的事用哪一種，app 可以自行決定）'
+      - note: 'tdp note.7 沒寫用 Enter（menu 的 Books）進明細（tdp panel.13）算換 focus 還是 operation：「Enter 執行的 P3 operation」要記，「換 focus（Tab、數字鍵）」不記。暫時當換 focus、不記，程式標 TODO(tdp DM42)。terminu 回覆（2026-10-27）：照 A 不記，K3 的 Enter 進明細就是換 focus，明細本來就跟著 cursor 換、沒多看到什麼；已寫進本機的 note.7，等 tdp 發版再把 TODO 改成引 tdp note.7'
+        issue: 'DM42，SendMessage 送給 terminu 的 session（2026-10-27）'
   - id: 10
     spec: 1
     request: '[P]opups 上按 r 把書拿掉，先問'
@@ -100,6 +102,6 @@ tasks:
   - id: 17
     spec: 1
     request: '用 Homebrew、安裝腳本（裝到 ~/.local/bin，不用 sudo）或 go install 裝，用 brew 或移除腳本移除；只有 macOS 與 Linux，要 Nerd Font 與 truecolor'
-    tdp: [tdp E4, tdp E6, tdp project.2, tdp project.3, tdp project.7, tdp project/family.mk, tdp project/release.yml, tdp project/goreleaser.yaml, tdp project/install.sh, tdp project/uninstall.sh]
+    tdp: [tdp E4, tdp E6, tdp E7, tdp L1, tdp project.2, tdp project.3, tdp project.7, tdp project/family.mk, tdp project/release.yml, tdp project/goreleaser.yaml, tdp project/install.sh, tdp project/uninstall.sh, tdp project/version.go, tdp project/gitignore]
     remark:
       - '只出 linux、darwin：goreleaser 範本的 Windows 那幾行不打開（tdp project.2）'

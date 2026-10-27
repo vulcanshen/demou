@@ -1,4 +1,4 @@
-spec: 1
+spec: 2
 tasks:
   - id: 1
     accepted: true
@@ -18,7 +18,7 @@ tasks:
     accepted: true
   - id: 9
     accepted: false
-    reason: tdp 不清楚：tdp note.7 寫 App Log 記「使用者做的動作與結果」，沒劃出哪些動作要記；只打開唯讀內容（Enter 打開第一頁、作者）、只換看的東西（換畫面、換書架）要不要記一筆，tdp 沒寫（DM41 已回報 terminu，等 tdp 發版）
+    reason: tdp 不清楚：[1] SHELVES 上的 Enter（Space menu item 區的 Books，照 tdp panel.13 把 focus 送到明細）要不要記，tdp note.7 兩處答案不同：「動作是哪些：Rules P3 的 item、panel、global operation，不管是從 menu、letter hotkey 還是 Enter 執行的」說要記；「移動 cursor、換 focus（Tab、數字鍵）……不是動作，不記」的括號裡沒寫用 Enter 進明細算哪一邊
   - id: 10
     accepted: true
   - id: 11
