@@ -36,9 +36,8 @@ func newMoveScreen(d *demou) *moveScreen {
 		{Key: "Enter", Label: "Open", Desc: "who they were", Scope: terminu.ItemScope, Hint: "open",
 			Hidden: func() bool { return m.books.Tab != authorsTab }, Do: m.openAuthor}}
 	shelves := &terminu.Panel{Label: "Shelves", Body: m.shelves, Details: m.books, Actions: []terminu.Action{
-		// TODO(tdp DM42): only the focus moves to the details, so it is not
-		// logged (tdp note.7); whether an item operation that does only that
-		// goes in the App Log, tdp does not say.
+		// Going into the details only moves the focus (tdp K3), so it is not
+		// logged (tdp note.7).
 		{Key: "Enter", Label: "Books", Desc: "the books on this shelf", Scope: terminu.ItemScope, Hint: "books",
 			ToDetails: func() bool { return true }},
 	}}

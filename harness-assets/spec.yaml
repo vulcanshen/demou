@@ -1,6 +1,6 @@
-id: 2
-from: v0.10.3
-to: v0.11.2
+id: 3
+from: v0.11.2
+to: v0.11.3
 tasks:
   - id: 1
     spec: 2
@@ -53,15 +53,14 @@ tasks:
     remark:
       - 's 是領域熱鍵（tdp P5），在 Space menu 裡是 sort'
   - id: 9
-    spec: 2
+    spec: 3
     request: '! 打開 App Log：做過的事，最新的在最下面；在這裡是換過的畫面、打開過的第一頁與作者，以及搬、拿掉、加進來、排序過的書'
-    tdp: [tdp K1, tdp F5, tdp M1, tdp P3, tdp note.7, tdp toast.2, tdp panel.13]
+    tdp: [tdp K1, tdp K3, tdp F5, tdp M1, tdp P3, tdp note.7, tdp toast.2, tdp panel.13]
     remark:
       - '記什麼照 tdp note.7（DM41 回報後 tdp v0.11.0 定的）：tdp P3 的三種 operation 都記，只看不改的也記（打開第一頁、作者）；換畫面由 lib 記'
       - '不記的（tdp note.7）：移動 cursor（j|k 換書架，明細跟著換）、換 focus（[1] SHELVES 上的 Enter 只把 focus 移到 [2]）、Space menu、?、!、在 confirm 或表單按 Esc 取消的動作'
       - '打開與排序記 Info，改到書架的記 Success（tdp toast.2：做完的事用哪一種，app 可以自行決定）'
-      - note: 'tdp note.7 沒寫用 Enter（menu 的 Books）進明細（tdp panel.13）算換 focus 還是 operation：「Enter 執行的 P3 operation」要記，「換 focus（Tab、數字鍵）」不記。暫時當換 focus、不記，程式標 TODO(tdp DM42)。terminu 回覆（2026-10-27）：照 A 不記，K3 的 Enter 進明細就是換 focus，明細本來就跟著 cursor 換、沒多看到什麼；已寫進本機的 note.7，等 tdp 發版再把 TODO 改成引 tdp note.7'
-        issue: 'DM42，SendMessage 送給 terminu 的 session（2026-10-27）'
+      - '[1] SHELVES 上用 Enter（menu 的 Books）進明細（tdp panel.13）是換 focus（tdp K3），不記（tdp note.7，DM42 回報後 tdp v0.11.3 寫明）'
   - id: 10
     spec: 1
     request: '[P]opups 上按 r 把書拿掉，先問'

@@ -74,7 +74,7 @@ tasks:
       排過記進 App Log（Info，「Books sorted by year」、「Books sorted by title」）
     test: [TestActionsSort]
   - id: 9
-    spec: 2
+    spec: 3
     implementation: |
       在 panel 上按 !：tgo 的 App Log
       demou 的每個 operation 記一筆（tgo App.Log），從 Space menu、熱鍵、Enter 執行的都一樣：
