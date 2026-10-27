@@ -8,7 +8,7 @@
 set -e
 
 APP="demou"
-# The prefix of the app's environment variables (tdp E2): DEMOU__CONFIG, …
+# The prefix of the app's environment variables (tdp E2): <APP>__CONFIG, …
 APP_UPPER=$(echo "$APP" | tr '[:lower:]' '[:upper:]')
 
 CANDIDATES="$HOME/.local/bin/$APP /usr/local/bin/$APP"
@@ -59,7 +59,7 @@ env_of() {
 
 # Where tdp E3 puts the settings, the state, the data and the cache; each is
 # asked about only when it is there. The state lives in the settings directory
-# unless DEMOU__STATE moved it elsewhere, so it is asked about on its own only
+# unless <APP>__STATE moved it elsewhere, so it is asked about on its own only
 # then.
 CONFIG_DIR=$(env_of "${APP_UPPER}__CONFIG")
 [ -n "$CONFIG_DIR" ] || CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/$APP"
