@@ -1,14 +1,15 @@
-id: 1
-from: 0
-to: v0.10.3
+id: 2
+from: v0.10.3
+to: v0.11.2
 tasks:
   - id: 1
-    spec: 1
+    spec: 2
     request: '三個畫面，一個畫面一課：[M]ove 看與移動、[A]ctions 找動作、[P]opups popup 疊 popup；按 M、A、P 換畫面，啟動時打開 [M]ove'
     tdp: [tdp terms.2, tdp screen.1, tdp screen.3, tdp screen.5, tdp screen.8, tdp panel.5, tdp P5, tdp M4, tdp M5, tdp K12, tdp L1, tdp L4]
     remark:
       - '畫面 chip 列上三個畫面；M、A、P 是領域熱鍵（tdp P5），不佔移動的字母（tdp K12）'
       - '一個畫面練一部分操作，三個畫面共用同一個書架（README 的特色）'
+      - '60 欄時 [M]ove 的 [1] SHELVES 22 欄、[2] BOOKS 38 欄並排，[A]ctions、[P]opups 各一個 panel（tdp L1：60×32 所有 panel 並排）；窄寬的門檻 60，是 tdp screen.5 的上限'
   - id: 2
     spec: 1
     request: '書架上是二十本經典，每次啟動都一樣；它什麼都不存，不碰使用者的任何檔案'
@@ -23,9 +24,9 @@ tasks:
     remark:
       - '兩個 panel：書架的清單、那個書架的書；書那個 panel 有 tab，其中一個是 Authors'
   - id: 4
-    spec: 1
+    spec: 2
     request: 'Enter 做最直觀的那件事：打開那本書的第一頁；在作者上打開那個作者'
-    tdp: [tdp K3, tdp P5, tdp M6, tdp panel.13, tdp note.1, tdp note.2, tdp note.3, tdp components.3, tdp T1]
+    tdp: [tdp K3, tdp P5, tdp M6, tdp panel.13, tdp note.1, tdp note.2, tdp note.3, tdp note.7, tdp components.3, tdp T1]
     remark:
       - 'Enter 的動作是 app 自己定的（tdp P5、tdp K3）：同一種項目在三個畫面都是打開第一頁'
       - '第一頁與作者是唯讀內容，用 viewer（tdp note）'
@@ -52,12 +53,13 @@ tasks:
     remark:
       - 's 是領域熱鍵（tdp P5），在 Space menu 裡是 sort'
   - id: 9
-    spec: 1
-    request: '! 打開 App Log：做過的事，最新的在最下面；在這裡是搬、拿掉、加進來、排序過的書'
-    tdp: [tdp K1, tdp F5, tdp M1, tdp note.7, tdp toast.2]
+    spec: 2
+    request: '! 打開 App Log：做過的事，最新的在最下面；在這裡是換過的畫面、打開過的第一頁與作者，以及搬、拿掉、加進來、排序過的書'
+    tdp: [tdp K1, tdp F5, tdp M1, tdp P3, tdp note.7, tdp toast.2]
     remark:
-      - note: 'tdp note.7 沒劃出「使用者做的動作」的範圍：只打開唯讀內容（第一頁、作者）、只換看的東西（換畫面、換書架）要不要記，tdp 沒寫。暫時只記改到書架的事（Moved、Took、Put、排序），程式標 TODO(tdp DM41)。terminu 回覆（2026-10-27）：照 P3 的三種 operation 都記，含開 viewer、換畫面，移動 cursor 不記；已寫進本機的 note.7，等 tdp 發版、terminu-go 跟上再照升版流程改'
-        issue: 'DM41，SendMessage 送給 terminu 的 session（2026-10-27）'
+      - '記什麼照 tdp note.7（DM41 回報後 tdp v0.11.0 定的）：tdp P3 的三種 operation 都記，只看不改的也記（打開第一頁、作者）；換畫面由 lib 記'
+      - '不記的（tdp note.7）：移動 cursor（j|k 換書架，明細跟著換）、換 focus（[1] SHELVES 上的 Enter 只把 focus 移到 [2]）、Space menu、?、!、在 confirm 或表單按 Esc 取消的動作'
+      - '打開與排序記 Info，改到書架的記 Success（tdp toast.2：做完的事用哪一種，app 可以自行決定）'
   - id: 10
     spec: 1
     request: '[P]opups 上按 r 把書拿掉，先問'
@@ -76,11 +78,11 @@ tasks:
     request: 'q 離開，先問'
     tdp: [tdp K9, tdp F6, tdp confirm]
   - id: 13
-    spec: 1
-    request: '終端機比 80×24 小時只顯示 demou 的名稱與需要的大小，拉大就回到原來的樣子'
+    spec: 2
+    request: '終端機比 60×24 小時只顯示 demou 的名稱、需要的大小與怎麼離開，拉大就回到原來的樣子'
     tdp: [tdp L1, tdp screen.7, tdp E5]
     remark:
-      - '最低尺寸 80×24：tdp L1 放行 app 調低（不能高於 80×40），demou 的版面在 80×24 畫得下'
+      - '最低尺寸 60×24：tdp L1 放行 app 調低（不能高於 60×32）。寬用標準的 60；高沿用 24，新開的終端機常是 80×24（user 定 80×24 時的理由，DM39），demou 的版面在 60×24 畫得下'
   - id: 14
     spec: 1
     request: 'demou version 印出版號（-v、--version），demou help 印出命令列的用法（-h、--help）'

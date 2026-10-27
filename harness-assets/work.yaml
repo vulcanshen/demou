@@ -1,15 +1,17 @@
 tasks:
   - id: 1
-    spec: 1
+    spec: 2
     implementation: |
       三個畫面（tgo Screen）依序是 Move（M，look around and move）、Actions（A，find what you can do here）、Popups（P，popups over popups），
       tgo 畫成畫面 chip 列 [M]ove、[A]ctions、[P]opups；在 panel 上按 M、A、P 換到那個畫面；啟動時是第一個畫面 [M]ove；沒有 statusbar
-      [M]ove：左邊 22 欄寬的 [1] SHELVES、右邊 [2] BOOKS（task 3）；窄於 60 欄時照 tgo 的窄寬畫
+      [M]ove：左邊 22 欄寬的 [1] SHELVES、右邊 [2] BOOKS（task 3），60 欄時 BOOKS 38 欄，兩個並排；窄寬的門檻 60（tgo Screen.NarrowBelow），
+      最低尺寸也是 60 欄，所以不會進到窄寬
       [A]ctions：一個 [1] BOOKS panel，書架上全部的書：Title、Author、Year、Shelf 四欄；空的時候 No books / Press [Space] to see what you can do here
       [P]opups：一個 [1] BOOKS panel，全部的書：Title、Author、Shelf 三欄；空的時候 No books on the shelf / Press [n] to add a book
       三個畫面共用同一個書架：一個畫面搬、拿掉、加的書，三個畫面都重畫
       欄放不下時照 tgo 的 Drop 先拿掉：[A]ctions 依序 Author、Year、Shelf，[P]opups 依序 Shelf、Author；書名一定留著；書名、作者標 Shrink
-      測試在好幾種大小下量每一列都等於終端機寬度（tdp L4），icon 與 powerline 符號各跑 1/1、2/1、2/2 格三次（tdp E5）
+      測試在 60×32、60×24、120×40、160×50 下量每一列都等於終端機寬度（tdp L4），icon 與 powerline 符號各跑 1/1、2/1、2/2 格三次（tdp E5）；
+      tdptest 在 60×32 走一遍每個畫面與 panel
     test: [TestL4EveryLineIsTheTerminalsWidth, TestTDP]
   - id: 2
     spec: 1
@@ -28,7 +30,7 @@ tasks:
       j|k 在書架上移，[2] 跟著換成那個書架的書（或作者）；Tab、1–9 換 panel；h|l 切 tab；gg|G 到頭尾；走過最後一個回到第一個（tgo 做）
     test: [TestMoveShelvesShowTheirBooks, TestMoveTabsAndPanels]
   - id: 4
-    spec: 1
+    spec: 2
     implementation: |
       書上按 Enter（三個畫面都一樣），或 Space menu 這一項的 Open（its first page）：tgo 的 viewer，標題 First page 加書名，
       標題 glyph nf-fa-book（U+F02D）；內容是那本書第一頁的一段文字，viewer 照 popup 的寬度在字與字之間折行
@@ -37,7 +39,8 @@ tasks:
       第一行「<名字>, <生年>–<卒年>.」，下面一行一本，列出書架上那個作者的書
       [M]ove 的 [1] SHELVES 上按 Enter（Books：the books on this shelf）：focus 到 [2] BOOKS（tgo 的明細）
       從 Space menu 打開的第一頁、作者開在 menu 上面，Esc 回到 menu（tgo 預設保留 source）
-    test: [TestEnterOpensTheFirstPageEverywhere, TestMoveOpenAnAuthor, TestFirstPageFoldsBetweenWords, TestOpenFromTheMenuGoesBackToIt]
+      打開的時候記進 App Log（Info，「Opened the first page of <書名>」、「Opened the author <名字>」）
+    test: [TestEnterOpensTheFirstPageEverywhere, TestMoveOpenAnAuthor, TestFirstPageFoldsBetweenWords, TestOpenFromTheMenuGoesBackToIt, TestAppLogKeepsWhatWasDone]
   - id: 5
     spec: 1
     implementation: |
@@ -71,11 +74,15 @@ tasks:
       排過記進 App Log（Info，「Books sorted by year」、「Books sorted by title」）
     test: [TestActionsSort]
   - id: 9
-    spec: 1
+    spec: 2
     implementation: |
       在 panel 上按 !：tgo 的 App Log
-      書架每一次改變記一筆：搬了一本（Success，Moved …）、拿掉一本（Success，Took …）、加了一本（Success，Put …）、排序（Info）
-      書的那幾筆以動詞開頭，使用者用小寫打的書名照原樣，那一筆照樣大寫開頭
+      demou 的每個 operation 記一筆（tgo App.Log），從 Space menu、熱鍵、Enter 執行的都一樣：
+      打開第一頁（Info，Opened the first page of …）、打開作者（Info，Opened the author …）、
+      搬了一本（Success，Moved …）、拿掉一本（Success，Took …）、加了一本（Success，Put …）、排序（Info，Books sorted by …）
+      換畫面由 tgo 自己記（Switched to <畫面>），demou 不另外記
+      不記：j|k 移動、[1] SHELVES 上的 Enter（只把 focus 移到 [2]）、Space menu、?、!；在 confirm 或表單按 Esc 取消時 tgo 不跑 Do、Submit，不會記
+      每一筆以動詞開頭，使用者用小寫打的書名照原樣，那一筆照樣大寫開頭
       toast 由 tgo 自己記進去；demou 沒有自己的 toast
     test: [TestAppLogKeepsWhatWasDone, TestAppLogStartsWithACapital]
   - id: 10
@@ -106,11 +113,12 @@ tasks:
       Space menu 開著時按 q 也先問，Esc 回到 menu
     test: [TestQuitAsksFirst]
   - id: 13
-    spec: 1
+    spec: 2
     implementation: |
-      最低尺寸 80×24（tgo App.MinWidth、MinHeight）：比這小時 tgo 只畫 demou 與 needs a terminal of at least 80×24
+      最低尺寸 60×24（tgo App.MinWidth、MinHeight）：比這小時 tgo 只畫三列：demou、needs a terminal of at least 60×24、
+      Press [Ctrl-C] twice to quit；放不下時先拿掉尺寸那一列，再拿掉怎麼離開那一列，名稱一定留著
       這時按鍵都不作用，只有連按兩次 Ctrl-C 離開；拉大回到原本的畫面，開著的 popup 也在
-      測試縮到 80×5、1×1 再拉大，也把開著的 popup 縮到 80×40、120×24、80×24
+      測試縮到 59×24、60×23、40×12、30×5、60×2、60×1、1×1，驗每一種該有哪幾列，再拉大；也把開著的 popup 縮到 60×32、120×24、60×24、60×5、1×1
     test: [TestL1BelowTheLeastSize, TestTDP]
   - id: 14
     spec: 1

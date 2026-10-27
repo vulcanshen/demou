@@ -14,7 +14,7 @@
 
 ## 在哪些平台
 
-macOS 與 Linux（WSL 也可以），沒有 Windows 版。終端機要有 Nerd Font、truecolor，至少 80 欄寬、24 列高。
+macOS 與 Linux（WSL 也可以），沒有 Windows 版。終端機要有 Nerd Font、truecolor，至少 60 欄寬、24 列高。
 
 ## 哪些事不能發生
 

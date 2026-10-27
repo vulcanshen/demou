@@ -79,7 +79,7 @@ type sized struct {
 // draws it (tdp E8).
 func TestL4EveryLineIsTheTerminalsWidth(t *testing.T) {
 	var cases []sized
-	for _, sz := range [][2]int{{80, 40}, {120, 40}, {80, 24}, {160, 50}} {
+	for _, sz := range [][2]int{{60, 32}, {120, 40}, {60, 24}, {160, 50}} {
 		for _, st := range states {
 			cases = append(cases, sized{w: sz[0], h: sz[1], name: st.name, keys: st.keys})
 		}
@@ -94,7 +94,7 @@ func TestL4EveryLineIsTheTerminalsWidth(t *testing.T) {
 func TestE5PopupBiggerThanTheScreen(t *testing.T) {
 	var cases []sized
 	for _, st := range states[3:] { // the popups
-		for _, small := range [][2]int{{80, 40}, {120, 24}, {80, 24}, {80, 5}, {1, 1}} {
+		for _, small := range [][2]int{{60, 32}, {120, 24}, {60, 24}, {60, 5}, {1, 1}} {
 			cases = append(cases, sized{w: 120, h: 40, name: st.name, keys: st.keys, small: small})
 		}
 	}
@@ -110,12 +110,13 @@ func checkSized(t *testing.T, c sized) {
 	hs.fullWidth(c.name)
 }
 
-// TestL1BelowTheLeastSize is tdp L1: smaller than 80×24 either way, only
-// demou's name shows, and under it the size it needs when that fits. No key
-// acts but Ctrl-C twice, and all comes back as the terminal grows.
+// TestL1BelowTheLeastSize is tdp L1: smaller than 60×24 either way, only
+// demou's name shows, under it the size it needs and how to quit, the size
+// going first when they do not fit. No key acts but Ctrl-C twice, and all
+// comes back as the terminal grows.
 func TestL1BelowTheLeastSize(t *testing.T) {
-	const hint = "needs a terminal of at least 80×24"
-	for _, sz := range [][2]int{{79, 24}, {80, 23}, {40, 12}, {30, 5}, {80, 1}, {1, 1}} {
+	const hint, quit = "needs a terminal of at least 60×24", "Press [Ctrl-C] twice to quit"
+	for _, sz := range [][2]int{{59, 24}, {60, 23}, {40, 12}, {30, 5}, {60, 2}, {60, 1}, {1, 1}} {
 		t.Run(fmt.Sprintf("%dx%d", sz[0], sz[1]), func(t *testing.T) {
 			t.Parallel()
 			hs := newHarness(t, 80, 40)
@@ -126,10 +127,15 @@ func TestL1BelowTheLeastSize(t *testing.T) {
 			if sz[0] >= len("demou") {
 				hs.contains("demou")
 			}
-			if sz[0] >= terminu.Width(hint) && sz[1] >= 2 {
+			if sz[0] >= terminu.Width(hint) && sz[1] >= 3 {
 				hs.contains(hint)
 			} else {
 				hs.lacks(hint)
+			}
+			if sz[0] >= terminu.Width(quit) && sz[1] >= 2 {
+				hs.contains(quit)
+			} else {
+				hs.lacks(quit)
 			}
 			hs.lacks("ITEM OPERATION")
 			hs.keys("q", "Esc", "j", "Enter", "Ctrl-C")
@@ -252,13 +258,19 @@ func TestActionsSpaceMenu(t *testing.T) {
 	hs.lacks("ITEM OPERATION")
 }
 
-// What is done to the bookshelf goes in the App Log, which ! opens (tdp F5).
+// Each of demou's operations goes in the App Log, which ! opens (tdp F5),
+// one that only looks too; one cancelled at its confirm does not (tdp
+// note.7).
 func TestAppLogKeepsWhatWasDone(t *testing.T) {
 	t.Parallel()
 	hs := newHarness(t, 80, 40)
 	hs.contains("!:log")
-	hs.keys("A", "b", "s", "!")
-	hs.contains("OK   Moved A Tale of Two Cities to Reading", "INFO Books sorted by year")
+	hs.keys("Tab", "l", "Enter", "Esc")
+	hs.keys("A", "b", "s", "Enter", "Esc")
+	hs.keys("P", "r", "Esc", "!")
+	hs.contains("INFO Opened the author Jane Austen", "OK   Moved A Tale of Two Cities to Reading",
+		"INFO Books sorted by year", "INFO Opened the first page of A Tale of Two Cities")
+	hs.lacks("Took")
 }
 
 // An entry starts with its verb, so a title typed in lowercase stays as typed

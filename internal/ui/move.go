@@ -108,5 +108,6 @@ func (m *moveScreen) openAuthor() tea.Cmd {
 			lines = append(lines, b.title)
 		}
 	}
+	m.d.a.Log(terminu.Info, "Opened the author "+a.name)
 	return m.d.a.Viewer(&terminu.Viewer{Title: "Author", Subject: a.name, Glyph: glyphAuthor, Lines: lines})
 }

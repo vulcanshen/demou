@@ -43,9 +43,10 @@ func New() *terminu.App { return newDemou().a }
 
 func newDemou() *demou {
 	d := &demou{a: terminu.New("demou"), books: theBooks()}
-	// The least size (tdp L1): a new terminal window is often 80×24, and
-	// demou's screens work there; smaller, only its name shows.
-	d.a.MinWidth, d.a.MinHeight = 80, 24
+	// The least size (tdp L1): no wider than the standard 60 columns, and
+	// 24 rows, as a new terminal window often has; demou's screens work
+	// there. Smaller, only its name shows.
+	d.a.MinWidth, d.a.MinHeight = 60, 24
 	d.a.Quit = &terminu.Ask{Title: "Quit", Question: "Quit demou?", Verb: "quit"}
 	d.a.Splash = splash()
 	d.move = newMoveScreen(d)
@@ -92,12 +93,9 @@ func (d *demou) current(l *terminu.List) *book {
 }
 
 // moveTo, remove and add change the bookshelf, each change going in the App
-// Log (tdp F5), which ! opens. An entry starts with its verb, so it starts
-// with a capital however a new book's title was typed (tdp toast.2).
-//
-// TODO(tdp DM41): only changes to the bookshelf go in; whether opening a
-// viewer or switching what is shown (a screen, a shelf) should too, tdp
-// note.7 does not say.
+// Log (tdp F5), which ! opens; so does each of demou's operations that only
+// looks (tdp note.7). An entry starts with its verb, so it starts with a
+// capital however a new book's title was typed (tdp toast.2).
 func (d *demou) moveTo(b *book, shelf string) {
 	b.shelf = shelf
 	d.refresh()
@@ -128,6 +126,7 @@ func (d *demou) openBook(l *terminu.List) terminu.Action {
 		Disabled: func() bool { b := d.current(l); return b == nil || b.firstPage == "" },
 		Do: func() tea.Cmd {
 			b := d.current(l)
+			d.a.Log(terminu.Info, "Opened the first page of "+b.title)
 			return d.a.Viewer(&terminu.Viewer{Title: "First page", Subject: b.title, Glyph: glyphBook,
 				Lines: []string{b.firstPage}})
 		}}
