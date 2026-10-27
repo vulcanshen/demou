@@ -88,8 +88,8 @@ func (m *moveScreen) fill() {
 			rows = append(rows, terminu.Row{ID: a.name, Cells: []string{a.name, strconv.Itoa(a.born), strconv.Itoa(a.died)}})
 		}
 	} else {
-		// A title and its author always show.
-		m.list.Columns = []terminu.Column{{Title: "Title", Shrink: true}, {Title: "Author", Shrink: true},
+		// A title always shows; the year goes first, then the author (tdp panel.5).
+		m.list.Columns = []terminu.Column{{Title: "Title", Shrink: true}, {Title: "Author", Shrink: true, Drop: 2},
 			{Title: "Year", Number: true, Drop: 1}}
 		for _, b := range on {
 			rows = append(rows, terminu.Row{ID: b.id, Cells: []string{b.title, b.author, b.yearText()}})

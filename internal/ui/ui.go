@@ -94,6 +94,10 @@ func (d *demou) current(l *terminu.List) *book {
 // moveTo, remove and add change the bookshelf, each change going in the App
 // Log (tdp F5), which ! opens. An entry starts with its verb, so it starts
 // with a capital however a new book's title was typed (tdp toast.2).
+//
+// TODO(tdp DM41): only changes to the bookshelf go in; whether opening a
+// viewer or switching what is shown (a screen, a shelf) should too, tdp
+// note.7 does not say.
 func (d *demou) moveTo(b *book, shelf string) {
 	b.shelf = shelf
 	d.refresh()

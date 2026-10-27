@@ -1,0 +1,37 @@
+spec: 1
+tasks:
+  - id: 1
+    accepted: true
+  - id: 2
+    accepted: true
+  - id: 3
+    accepted: true
+  - id: 4
+    accepted: true
+  - id: 5
+    accepted: true
+  - id: 6
+    accepted: true
+  - id: 7
+    accepted: true
+  - id: 8
+    accepted: true
+  - id: 9
+    accepted: false
+    reason: tdp 不清楚：tdp note.7 寫 App Log 記「使用者做的動作與結果」，沒劃出哪些動作要記；只打開唯讀內容（Enter 打開第一頁、作者）、只換看的東西（換畫面、換書架）要不要記一筆，tdp 沒寫（DM41 已回報 terminu，等 tdp 發版）
+  - id: 10
+    accepted: true
+  - id: 11
+    accepted: true
+  - id: 12
+    accepted: true
+  - id: 13
+    accepted: true
+  - id: 14
+    accepted: true
+  - id: 15
+    accepted: true
+  - id: 16
+    accepted: true
+  - id: 17
+    accepted: true
