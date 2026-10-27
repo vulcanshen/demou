@@ -141,18 +141,12 @@ the family's shared setting keys.
 
 ## The terminu family
 
-demou follows [terminu design](https://github.com/vulcanshen/terminu) and is built with
-[terminu-go](https://github.com/vulcanshen/terminu-go). The other apps in the family:
+demou follows terminu design:
 
-| App | What it is |
-|---|---|
-| [kbu](https://github.com/vulcanshen/kbu) | A Kubernetes TUI dashboard |
-| [filu](https://github.com/vulcanshen/filu) | A terminal file manager you don't have to learn |
-| [sshu](https://github.com/vulcanshen/sshu) | A terminal front end for ssh and sftp |
-| [webu](https://github.com/vulcanshen/webu) | A terminal browser that reads a web page as a document |
-| [locku](https://github.com/vulcanshen/locku) | A screensaver with a PIN lock, for the terminal |
-| [kamonu](https://github.com/vulcanshen/kamonu) | A terminal editor for the family's marks (kamon), drawn letter by letter |
-| [ccdrawu](https://github.com/vulcanshen/ccdrawu) | A sidebar for Claude Code: usage, context, cost and git beside the transcript |
+- [terminu design](https://github.com/vulcanshen/terminu): the family's design rules
+- [terminu-go](https://github.com/vulcanshen/terminu-go): the Go library demou is built with
+- [terminu-harness](https://github.com/vulcanshen/terminu-harness): the Claude Code plugin for building apps to terminu
+  design
 
 ## License
 
