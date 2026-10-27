@@ -1,0 +1,129 @@
+tasks:
+  - id: 1
+    spec: 1
+    implementation: |
+      三個畫面 [M]ove、[A]ctions、[P]opups 畫在 tgo 的畫面 chip 列；在 panel 上按 M、A、P 換到那個畫面；啟動時打開 [M]ove
+      三個畫面共用同一個書架（在一個畫面搬、拿掉、加的書，另外兩個畫面也看得到）
+      測試在好幾種大小與 icon 寬度下量每一列都等於終端機寬度（tdp L4）
+      不知道：每個畫面的 panel 怎麼排、panel 的標題、chip 列右邊有沒有 statusbar
+    test: [TestL4EveryLineIsTheTerminalsWidth, TestTDP]
+  - id: 2
+    spec: 1
+    implementation: |
+      二十本經典寫死在程式裡，沒有隨機的東西，每次啟動都是同一個書架
+      書只在記憶體裡；不讀不寫任何檔案，所以讀不了自己的檔（tgo MoveAside）、tdp E3 不再用的檔都不會發生
+    test: [TestSameEveryStart, TestTDP]
+  - id: 3
+    spec: 1
+    implementation: |
+      [M]ove 兩個 panel（tgo List）：書架的清單、那個書架的書；書那個 panel（BOOKS）有 tab，其中一個是 Authors，hint 有 h|l:tab
+      j|k 在書架上移，書那邊換成那個書架的書；Tab、1–9 換 panel；h|l 切 tab；gg|G 到頭尾；j|k、h|l 走過最後一個回到第一個（tgo 做）
+      欄放不下時照 tgo 的 Drop 拿掉：書名一定留著，[M]ove 上作者也留著；書名、作者、作者名標 Shrink，年份、書架、數量不標
+      不知道：panel 的標題、欄名、tab 的名稱（只知道有 Authors）、書架有哪幾個
+    test: [TestMoveShelvesShowTheirBooks, TestMoveTabsAndPanels]
+  - id: 4
+    spec: 1
+    implementation: |
+      書上按 Enter（三個畫面都一樣）：打開那本書的第一頁（tgo 的 viewer），一段文字由 viewer 照 popup 的寬度在字與字之間折行
+      Authors tab 的作者上按 Enter：打開那個作者（viewer）
+      Space menu 的 open：第一頁、作者開在 menu 上面，Esc 回到 menu（tgo 預設保留 source）
+      不知道：兩個 viewer 的標題與內容
+    test: [TestEnterOpensTheFirstPageEverywhere, TestMoveOpenAnAuthor, TestFirstPageFoldsBetweenWords, TestOpenFromTheMenuGoesBackToIt]
+  - id: 5
+    spec: 1
+    implementation: |
+      第一頁與作者兩個 viewer 用 tgo 的選取模式：v 進選取模式、移到起點，再按 v 開始選取，y 複製到終端機的剪貼簿
+    test: [TestViewersSelect]
+  - id: 6
+    spec: 1
+    implementation: |
+      在 panel 上按 Space：tgo 的 Space menu，分這一項、這個 panel、整個 app 三區，熱鍵用 [] 標出
+      [A]ctions 上書的動作：open（Enter）、begin（b）、finish（f）、sort（s）
+      ? 打開 tgo 的 key reference；tdptest 在每個畫面、每個 panel 打開 Space menu、global operation popup、key reference
+      不知道：每一區各有哪幾項；哪些動作在什麼時候停用（例：已經在 Done 的書按 finish）
+    test: [TestActionsSpaceMenu, TestTDP]
+  - id: 7
+    spec: 1
+    implementation: |
+      [A]ctions 的書上按 b，或 Space menu 的 begin：書移到 Reading
+      按 f，或 Space menu 的 finish：書移到 Done
+      搬過的書記進 App Log（OK，Moved 開頭）
+      不知道：已經在 Reading、Done 的書按 b、f 會怎樣
+    test: [TestActionsBeginAndFinish]
+  - id: 8
+    spec: 1
+    implementation: |
+      [A]ctions 上按 s，或 Space menu 的 sort：書按年份排，再按一次回到按書名
+      排過記進 App Log（INFO）
+      不知道：畫面上怎麼標出現在照什麼排（tdp panel.6）、在哪個 panel 上作用
+    test: [TestActionsSort]
+  - id: 9
+    spec: 1
+    implementation: |
+      在 panel 上按 !：tgo 的 App Log
+      書架每一次改變記一筆：搬了一本（OK，Moved …）、拿掉一本（OK，Took …）、加了一本（OK，Put …）、排序（INFO）
+      書的那幾筆以動詞開頭，使用者用小寫打的書名照原樣，那一筆照樣大寫開頭
+      toast 由 tgo 自己記進去；demou 沒有自己的 toast
+    test: [TestAppLogKeepsWhatWasDone, TestAppLogStartsWithACapital]
+  - id: 10
+    spec: 1
+    implementation: |
+      [P]opups 的書上按 r，或 Space menu 的 remove：開 confirm 問要不要拿掉那本書，問句在動作執行時寫（tgo Action.AskFor）
+      Enter 拿掉，記進 App Log（OK，Took …）；Esc 不動
+      不知道：confirm 的問句怎麼寫
+    test: [TestPopupsRemoveAsksFirst, TestPopupsRemoveFromTheMenu]
+  - id: 11
+    spec: 1
+    implementation: |
+      [P]opups 上按 n，或 Space menu 的 New book：開 NEW BOOK 表單（tgo form），有 Title（text popup）、Author，以及一個在表單上疊開的 select
+      Title 空著按 Enter：text popup 寫「Title is required」，不關；Title 與 Author 都有才加得進去
+      改過表單再按 Esc：先問，不直接關
+      從 Space menu 打開時：Esc 回到 menu；加好了表單與 menu 一起關（tgo App.CloseAll）
+      加進來的書記進 App Log（OK，Put …）
+      不知道：select 選的是什麼（例：書架）、欄位的順序、表單的按鈕與 hint
+    test: [TestPopupsNewBook, TestPopupsNewBookNeedsTitleAndAuthor, TestPopupsEmptyTitleSaysSo, TestPopupsNewBookFromTheMenu, TestPopupsChangedFormAsksBeforeEsc]
+  - id: 12
+    spec: 1
+    implementation: |
+      按 q：開 confirm 問要不要離開，Enter 離開、Esc 回去（tgo 的離開流程）
+      Space menu 開著時按 q 也先問，Esc 回到 menu
+    test: [TestQuitAsksFirst]
+  - id: 13
+    spec: 1
+    implementation: |
+      最低尺寸 80×24（tgo App.MinWidth、MinHeight）：比這小時 tgo 只畫 demou 與 needs a terminal of at least 80×24
+      這時按鍵都不作用，只有連按兩次 Ctrl-C 離開；拉大回到原本的畫面，開著的 popup 也在
+      測試縮到 80×5、1×1 再拉大，也把開著的 popup 縮到 80×40、120×24、80×24
+    test: [TestL1BelowTheLeastSize, TestTDP]
+  - id: 14
+    spec: 1
+    implementation: |
+      demou version（-v、--version）印出版號；demou help（-h、--help）印出命令列的用法
+      版號在 internal/version（照 tdp project/version.go），發版時寫入
+      不知道：help 印的內容、不認得的參數怎麼處理
+    test:
+      - commit: 69fcf7a
+  - id: 15
+    spec: 1
+    implementation: |
+      docs/icon.svg 是 demou 的 mark（用 kamonu 畫的）；internal/ui 嵌一份同樣的 svg 給 splash 畫，測試確認兩份一樣
+      README 與 CHANGELOG 不寫 splash
+      不知道：splash 從哪裡打開、畫出來的樣子
+    test: [TestSplashIsDocsIcon]
+  - id: 16
+    spec: 1
+    implementation: |
+      啟動時由 tgo 量 icon 與 powerline 符號的寬度；DEMOU__ICON_WIDTH、DEMOU__POWERLINE_WIDTH、TERMINU__ICON_WIDTH、
+      TERMINU__POWERLINE_WIDTH、LC_TERMINU_ICON_WIDTH、LC_TERMINU_POWERLINE_WIDTH 照這個順序用第一個有設的（tgo 讀，demou 沒有自己的程式）
+      測試在好幾種 icon 寬度與大小下量整個畫面，包括比畫面大的 popup
+    test: [TestE5PopupBiggerThanTheScreen, TestTDP]
+  - id: 17
+    spec: 1
+    implementation: |
+      照 tdp 的 project 範本：family.mk、.github/workflows/release.yml、.goreleaser.yaml（只出 linux、darwin）、install.sh（裝到 ~/.local/bin，不用 sudo）、
+      uninstall.sh、internal/version、.gitignore
+      Homebrew 走 vulcanshen/tap；go install github.com/vulcanshen/demou/cmd/demou@latest
+      README 寫 Nerd Font、truecolor、80×24 的需求
+      tgo 的 tdptest 在 TestTDP/repo 比對 project 的範本檔
+      不知道：發布流程有沒有實際跑過（git 沒有 tag）
+    test: [TestTDP/repo]

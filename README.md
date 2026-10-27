@@ -138,7 +138,6 @@ the family's shared setting keys.
 ## Links
 
 - [CHANGELOG](CHANGELOG.md)
-- [Developer notes](docs/dev-remarks.md) (in Traditional Chinese)
 
 ## The terminu family
 

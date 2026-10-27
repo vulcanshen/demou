@@ -131,7 +131,6 @@ demou 沒有設定，也不存資料：書只在記憶體裡，改過的離開�
 ## 相關連結
 
 - [CHANGELOG](CHANGELOG.md)
-- [開發者備忘](docs/dev-remarks.md)
 
 ## terminu family
 
