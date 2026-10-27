@@ -1,6 +1,6 @@
-id: 5
-from: v0.11.4
-to: v0.11.5
+id: 6
+from: v0.11.5
+to: v1.0.0
 tasks:
   - id: 1
     spec: 2
