@@ -1,6 +1,6 @@
-id: 9
-from: v1.1.0-beta.2
-to: v1.1.0-beta.3
+id: 10
+from: v1.1.0-beta.3
+to: v1.1.0
 tasks:
   - id: 1
     spec: 2
@@ -99,7 +99,7 @@ tasks:
     request: '啟動時量 icon 與 powerline 符號佔幾格，量錯時用 DEMOU__、TERMINU__、LC_TERMINU_ 的環境變數設'
     tdp: [tdp E2, tdp E5, tdp E8]
   - id: 17
-    spec: 9
+    spec: 10
     request: '用 Homebrew、安裝腳本（裝到 ~/.local/bin，不用 sudo）或 go install 裝，用 brew 或移除腳本移除；只有 macOS 與 Linux，要 Nerd Font 與 truecolor'
     tdp: [tdp E4, tdp E6, tdp E7, tdp L1, tdp project.2, tdp project.3, tdp project.7, tdp project/family.mk, tdp project/release.yml, tdp project/goreleaser.yaml, tdp project/install.sh, tdp project/uninstall.sh, tdp project/version.go, tdp project/gitignore]
     remark:

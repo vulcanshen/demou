@@ -146,7 +146,7 @@ tasks:
       測試量整個畫面，包括比畫面大的 popup，icon 與 powerline 符號各跑 1/1、2/1、2/2 格三次：E5 要的「icon 兩格、powerline 一格」與「兩種都兩格」都有
     test: [TestE5PopupBiggerThanTheScreen, TestTDP]
   - id: 17
-    spec: 9
+    spec: 10
     implementation: |
       照 tdp 的 project 範本：family.mk、.github/workflows/release.yml、.goreleaser.yaml（只出 linux、darwin）、install.sh（裝到 ~/.local/bin，不用 sudo）、
       uninstall.sh、internal/version、.gitignore
