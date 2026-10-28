@@ -1,6 +1,6 @@
-id: 8
-from: v1.1.0-beta.1
-to: v1.1.0-beta.2
+id: 9
+from: v1.1.0-beta.2
+to: v1.1.0-beta.3
 tasks:
   - id: 1
     spec: 2
@@ -99,7 +99,7 @@ tasks:
     request: '啟動時量 icon 與 powerline 符號佔幾格，量錯時用 DEMOU__、TERMINU__、LC_TERMINU_ 的環境變數設'
     tdp: [tdp E2, tdp E5, tdp E8]
   - id: 17
-    spec: 8
+    spec: 9
     request: '用 Homebrew、安裝腳本（裝到 ~/.local/bin，不用 sudo）或 go install 裝，用 brew 或移除腳本移除；只有 macOS 與 Linux，要 Nerd Font 與 truecolor'
     tdp: [tdp E4, tdp E6, tdp E7, tdp L1, tdp project.2, tdp project.3, tdp project.7, tdp project/family.mk, tdp project/release.yml, tdp project/goreleaser.yaml, tdp project/install.sh, tdp project/uninstall.sh, tdp project/version.go, tdp project/gitignore]
     remark:
@@ -107,3 +107,4 @@ tasks:
       - 'Claude Code 的檔不進 git：.gitignore 照範本排除 CLAUDE.md 與 .claude/ 底下的檔，只留 harness 的 .claude/rules/terminu.md（tdp project.3）'
       - 'README 的 terminu family 段附 tdp、terminu-go、terminu-harness 的連結，不列家族成員（tdp E7）'
       - 'beta（tag vX.Y.Z-beta.N）發成 GitHub 的 pre-release，不推 Homebrew tap；release notes 寫在 checkout 外面（tdp project.7）'
+      - 'module 路徑是 github.com/vulcanshen/demou：還沒發到 v2，不帶 /vN（tdp project.3）；goreleaser 的 ldflags 從 go.mod 取 module 路徑'

@@ -4,9 +4,11 @@ Each release names the version of terminu design (tdp) it follows.
 
 ## Unreleased
 
-- Built on terminu-go v1.1.0-beta.2, following tdp v1.1.0-beta.2
+- Built on terminu-go v1.1.0-beta.3, following tdp v1.1.0-beta.3
 - The release templates from tdp v1.1.0-beta.2: a beta tag (`vX.Y.Z-beta.N`) makes a GitHub pre-release that the
   Homebrew tap does not get, and the release notes are written outside the checkout
+- goreleaser from the tdp v1.1.0-beta.3 template: the ldflags that stamp the version take the module path from
+  `go.mod`
 - Claude Code's files stay out of git: `.gitignore` from the tdp v1.1.0-beta.1 template, and git no longer tracks
   `CLAUDE.md`; harness's `.claude/rules/terminu.md` stays in
 - The README's terminu family section links tdp, terminu-go and terminu-harness instead of listing the other members
