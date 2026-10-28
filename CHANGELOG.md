@@ -2,6 +2,13 @@
 
 Each release names the version of terminu design (tdp) it follows.
 
+## Unreleased
+
+- Built on terminu-go v1.1.0-beta.1, following tdp v1.1.0-beta.1
+- Claude Code's files stay out of git: `.gitignore` from the tdp v1.1.0-beta.1 template, and git no longer tracks
+  `CLAUDE.md`; harness's `.claude/rules/terminu.md` stays in
+- The README's terminu family section links tdp, terminu-go and terminu-harness instead of listing the other members
+
 ## v1.0.0 — tdp v1.0.0
 
 - The repo, from the tdp v1.0.0 project templates: `family.mk`, the release workflow, goreleaser, `install.sh` and

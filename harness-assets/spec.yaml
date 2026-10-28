@@ -1,6 +1,6 @@
-id: 6
-from: v0.11.5
-to: v1.0.0
+id: 7
+from: v1.0.0
+to: v1.1.0-beta.1
 tasks:
   - id: 1
     spec: 2
@@ -57,10 +57,10 @@ tasks:
     request: '! 打開 App Log：做過的事，最新的在最下面；在這裡是換過的畫面、打開過的第一頁與作者，以及搬、拿掉、加進來、排序過的書'
     tdp: [tdp K1, tdp K3, tdp F5, tdp M1, tdp P3, tdp note.7, tdp toast.2, tdp panel.13]
     remark:
-      - '記什麼照 tdp note.7（DM41 回報後 tdp v0.11.0 定的）：tdp P3 的三種 operation 都記，只看不改的也記（打開第一頁、作者）；換畫面由 lib 記'
+      - '記什麼照 tdp note.7：tdp P3 的三種 operation 都記，只看不改的也記（打開第一頁、作者）；換畫面由 lib 記'
       - '不記的（tdp note.7）：移動 cursor（j|k 換書架，明細跟著換）、換 focus（[1] SHELVES 上的 Enter 只把 focus 移到 [2]）、Space menu、?、!、在 confirm 或表單按 Esc 取消的動作'
       - '打開與排序記 Info，改到書架的記 Success（tdp toast.2：做完的事用哪一種，app 可以自行決定）'
-      - '[1] SHELVES 上用 Enter（menu 的 Books）進明細（tdp panel.13）是換 focus（tdp K3），不記（tdp note.7，DM42 回報後 tdp v0.11.3 寫明）'
+      - '[1] SHELVES 上用 Enter（menu 的 Books）進明細（tdp panel.13）是換 focus（tdp K3），不記（tdp note.7）'
   - id: 10
     spec: 1
     request: '[P]opups 上按 r 把書拿掉，先問'
@@ -83,7 +83,7 @@ tasks:
     request: '終端機比 60×24 小時只顯示 demou 的名稱、需要的大小與怎麼離開，拉大就回到原來的樣子'
     tdp: [tdp L1, tdp screen.7, tdp E5]
     remark:
-      - '最低尺寸 60×24：tdp L1 放行 app 調低（不能高於 60×32）。寬用標準的 60；高沿用 24，新開的終端機常是 80×24（user 定 80×24 時的理由，DM39），demou 的版面在 60×24 畫得下'
+      - '最低尺寸 60×24：tdp L1 放行 app 調低（不能高於 60×32）。寬用標準的 60；高沿用 24：新開的終端機常是 80×24（user 定最低尺寸 80×24 時的理由），demou 的版面在 60×24 畫得下'
   - id: 14
     spec: 1
     request: 'demou version 印出版號（-v、--version），demou help 印出命令列的用法（-h、--help）'
@@ -99,8 +99,10 @@ tasks:
     request: '啟動時量 icon 與 powerline 符號佔幾格，量錯時用 DEMOU__、TERMINU__、LC_TERMINU_ 的環境變數設'
     tdp: [tdp E2, tdp E5, tdp E8]
   - id: 17
-    spec: 1
+    spec: 7
     request: '用 Homebrew、安裝腳本（裝到 ~/.local/bin，不用 sudo）或 go install 裝，用 brew 或移除腳本移除；只有 macOS 與 Linux，要 Nerd Font 與 truecolor'
     tdp: [tdp E4, tdp E6, tdp E7, tdp L1, tdp project.2, tdp project.3, tdp project.7, tdp project/family.mk, tdp project/release.yml, tdp project/goreleaser.yaml, tdp project/install.sh, tdp project/uninstall.sh, tdp project/version.go, tdp project/gitignore]
     remark:
       - '只出 linux、darwin：goreleaser 範本的 Windows 那幾行不打開（tdp project.2）'
+      - 'Claude Code 的檔不進 git：.gitignore 照範本排除 CLAUDE.md 與 .claude/ 底下的檔，只留 harness 的 .claude/rules/terminu.md（tdp project.3）'
+      - 'README 的 terminu family 段附 tdp、terminu-go、terminu-harness 的連結，不列家族成員（tdp E7）'
