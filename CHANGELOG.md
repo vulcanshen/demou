@@ -4,7 +4,9 @@ Each release names the version of terminu design (tdp) it follows.
 
 ## Unreleased
 
-- Built on terminu-go v1.2.0-beta.1, following tdp v1.2.0-beta.1
+- Built on terminu-go v1.2.0-beta.2, following tdp v1.2.0-beta.2
+- `/` finds a word on a first page, an author, the App Log and `?`, and `n|N` go from one to the next; a word that is
+  not there says so
 - The repo's templates (`family.mk`, the release workflow, goreleaser, `install.sh`, `uninstall.sh`,
   `internal/version`, `.gitignore`) come from terminu-harness v1.2.0-beta.2, where tdp v1.2.0-beta.1 moved them;
   their first comment names `harness project/…`

@@ -258,6 +258,19 @@ func TestActionsSpaceMenu(t *testing.T) {
 	hs.lacks("ITEM OPERATION")
 }
 
+// ? searches as a viewer does (tdp note.5).
+func TestKeyReferenceSearches(t *testing.T) {
+	t.Parallel()
+	hs := newHarness(t, 80, 40)
+	hs.keys("A", "?")
+	hs.contains("[1] BOOKS KEYS", "/:search ?|Esc:close")
+	hs.keys("/", "quit", "Enter")
+	hs.contains("[1] BOOKS KEYS")
+	hs.lacks("No line has")
+	hs.keys("/", "zzz", "Enter")
+	hs.contains("No line has zzz")
+}
+
 // Each of demou's operations goes in the App Log, which ! opens (tdp F5),
 // one that only looks too; one cancelled at its confirm does not (tdp
 // note.7).
@@ -281,6 +294,22 @@ func TestAppLogStartsWithACapital(t *testing.T) {
 	hs.keys("P", "n", "Enter", "persuasion", "Enter", "j", "Enter", "Tab", "Austen", "Enter", "Enter", "Tab", "Enter")
 	hs.keys("r", "Enter", "!")
 	hs.contains("OK   Put persuasion by Jane Austen on To read", "OK   Took persuasion off the shelf")
+}
+
+// The App Log searches as every viewer does (tdp note.3). A search is not an
+// operation (tdp note.7); one that finds nothing is an Info toast, which goes
+// in like every toast.
+func TestAppLogSearches(t *testing.T) {
+	t.Parallel()
+	hs := newHarness(t, 80, 40)
+	hs.keys("Tab", "Enter", "Esc", "!")
+	hs.contains("APP LOG", "/:search v:visual Esc:close")
+	hs.keys("/", "Opened", "Enter")
+	hs.lacks("No line has")
+	hs.keys("/", "zzz", "Enter")
+	hs.contains("INFO No line has zzz")
+	hs.keys("Esc", "Esc", "!")
+	hs.contains("INFO Opened the first page of Pride and Prejudice", "INFO No line has zzz")
 }
 
 func TestActionsSort(t *testing.T) {
@@ -377,6 +406,24 @@ func TestViewersSelect(t *testing.T) {
 		hs.keys("v", "e", "y")
 		hs.contains("SUCCESS", "Copied")
 		hs.lacks("Visual")
+	}
+}
+
+// Every viewer searches with / (tdp note.3): the first page and the author
+// have the lib's, unset; none found is an Info toast.
+func TestViewersSearch(t *testing.T) {
+	t.Parallel()
+	for _, keys := range [][]string{{"Tab", "Enter"}, {"Tab", "l", "Enter"}} {
+		hs := newHarness(t, 80, 40)
+		hs.keys(keys...)
+		hs.contains("/:search v:visual Esc:close")
+		hs.keys("/")
+		hs.contains("SEARCH", "Enter:find Esc:cancel")
+		hs.keys("e", "Enter")
+		hs.contains(" — ") // back on FIRST PAGE — …, AUTHOR — …
+		hs.lacks("SEARCH", "No line has")
+		hs.keys("/", "zzz", "Enter")
+		hs.contains("INFO", "No line has zzz")
 	}
 }
 

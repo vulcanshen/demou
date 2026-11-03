@@ -112,6 +112,7 @@ The keys every family app shares:
 | `gg\|G` | To the top, to the bottom |
 | `Enter` | The obvious thing: here, open the book at its first page |
 | `v`, `y` | On a page of text: `v` and move to where to start, `v` again and move to select; `y` copies it |
+| `/`, `n\|N` | On a page of text, the App Log and `?`: find a word; `n\|N` go to the next one, the previous one |
 | `Esc` | Close the popup on top, one at a time; it never leaves demou |
 | `q` | Quit, after asking |
 

@@ -30,25 +30,26 @@ tasks:
       j|k 在書架上移，[2] 跟著換成那個書架的書（或作者）；Tab、1–9 換 panel；h|l 切 tab；gg|G 到頭尾；走過最後一個回到第一個（tgo 做）
     test: [TestMoveShelvesShowTheirBooks, TestMoveTabsAndPanels]
   - id: 4
-    spec: 11
+    spec: 12
     implementation: |
       書上按 Enter（三個畫面都一樣），或 Space menu 這一項的 Open（its first page）：tgo 的 viewer，標題 First page 加書名，
       標題 glyph nf-fa-book（U+F02D）；內容是那本書第一頁的一段文字，viewer 照 popup 的寬度在字與字之間折行
-      第一頁與作者兩個 viewer 沒有 / 搜尋（tgo Viewer.Search 不設）
+      第一頁與作者兩個 viewer 都有 / 搜尋，用 tgo 預設的（Viewer.Search 不設）：下框 hint /:search v:visual Esc:close；/ 開 input popup
+      SEARCH（Enter:find Esc:cancel），Enter 之後回到 viewer，命中的字由 tgo 畫底線、n|N 跳；一筆都沒有時 tgo 跳 Info toast「No line has <字>」
       在 demou 裡加的書沒有第一頁：Open 停用
       [M]ove 的 Authors tab 的作者上按 Enter，或 Space menu 的 Open（who they were）：viewer，標題 Author 加作者名，glyph nf-md-account（U+F0004）；
       第一行「<名字>, <生年>–<卒年>.」，下面一行一本，列出書架上那個作者的書
       [M]ove 的 [1] SHELVES 上按 Enter（Books：the books on this shelf）：focus 到 [2] BOOKS（tgo 的明細）
       從 Space menu 打開的第一頁、作者開在 menu 上面，Esc 回到 menu（tgo 預設保留 source）
       打開的時候記進 App Log（Info，「Opened the first page of <書名>」、「Opened the author <名字>」）
-    test: [TestEnterOpensTheFirstPageEverywhere, TestMoveOpenAnAuthor, TestFirstPageFoldsBetweenWords, TestOpenFromTheMenuGoesBackToIt, TestAppLogKeepsWhatWasDone]
+    test: [TestEnterOpensTheFirstPageEverywhere, TestMoveOpenAnAuthor, TestFirstPageFoldsBetweenWords, TestOpenFromTheMenuGoesBackToIt, TestAppLogKeepsWhatWasDone, TestViewersSearch]
   - id: 5
     spec: 1
     implementation: |
       第一頁與作者兩個 viewer 用 tgo 的選取模式：v 進選取模式、移到起點，再按 v 開始選取，y 複製到終端機的剪貼簿
     test: [TestViewersSelect]
   - id: 6
-    spec: 1
+    spec: 12
     implementation: |
       在 panel 上按 Space：tgo 的 Space menu，分 item、panel、global 三區，熱鍵用 [] 標出；global 區是 tgo 的（換畫面、離開這些）
       demou 自己放的動作（tgo Action）：
@@ -57,8 +58,10 @@ tasks:
       [A]ctions BOOKS：item 區 Enter Open、b begin（move it to Reading）、f finish（move it to Done）；panel 區 s sort（by year, or by title again）
       [P]opups BOOKS：item 區 Enter Open、r remove（take it off the shelf）；panel 區 n new book（put another book on the shelf）
       停用（tgo Action.Disabled）：Open 在 demou 裡加的書（沒有第一頁）；begin 在不在 To read 的書；finish 在不在 Reading 的書
-      ? 打開 tgo 的 key reference；tdptest 在每個畫面、每個 panel 打開 Space menu、global operation popup、key reference
-    test: [TestActionsSpaceMenu, TestTDP]
+      demou 的 panel 沒有自己的 /（沒有搜尋，也沒有 panel filter），Space menu 裡沒有搜尋
+      ? 打開 tgo 的 key reference，下框 hint /:search ?|Esc:close；/ 跟 viewer 一樣搜尋，一筆都沒有時 tgo 跳 Info toast（tgo 做）
+      tdptest 在每個畫面、每個 panel 打開 Space menu、global operation popup、key reference
+    test: [TestActionsSpaceMenu, TestKeyReferenceSearches, TestTDP]
   - id: 7
     spec: 1
     implementation: |
@@ -77,7 +80,7 @@ tasks:
       排過記進 App Log（Info，「Books sorted by year」、「Books sorted by title」）
     test: [TestActionsSort, TestActionsFromTheMenu]
   - id: 9
-    spec: 11
+    spec: 12
     implementation: |
       在 panel 上按 !：tgo 的 App Log
       demou 的每個 operation 記一筆（tgo App.Log），從 Space menu、熱鍵、Enter 執行的都一樣：
@@ -86,9 +89,11 @@ tasks:
       換畫面由 tgo 自己記（Switched to <畫面>），demou 不另外記
       不記：j|k 移動、[1] SHELVES 上的 Enter（只把 focus 移到 [2]）、Space menu、?、!；在 confirm 或表單按 Esc 取消時 tgo 不跑 Do、Submit，不會記
       第一頁與作者的 viewer 上按 v 進出選取模式，tgo 不記；y 複製跳的 Success toast 由 tgo 記
+      App Log 也有 / 搜尋（tgo 做，下框 hint /:search v:visual Esc:close）；在第一頁、作者、App Log、key reference 上搜尋，tgo 不記，
+      一筆都沒有時跳的 Info toast（No line has <字>）由 tgo 記
       每一筆以動詞開頭，使用者用小寫打的書名照原樣，那一筆照樣大寫開頭
       toast 由 tgo 自己記進去；demou 沒有自己的 toast
-    test: [TestAppLogKeepsWhatWasDone, TestAppLogStartsWithACapital]
+    test: [TestAppLogKeepsWhatWasDone, TestAppLogStartsWithACapital, TestAppLogSearches]
   - id: 10
     spec: 1
     implementation: |
@@ -150,7 +155,7 @@ tasks:
       測試量整個畫面，包括比畫面大的 popup，icon 與 powerline 符號各跑 1/1、2/1、2/2 格三次：E5 要的「icon 兩格、powerline 一格」與「兩種都兩格」都有
     test: [TestE5PopupBiggerThanTheScreen, TestTDP]
   - id: 17
-    spec: 11
+    spec: 12
     implementation: |
       照 terminu-harness 的 project 範本（範本檔開頭的註解寫 harness project/…）：family.mk、.github/workflows/release.yml、.goreleaser.yaml（只出 linux、darwin）、install.sh（裝到 ~/.local/bin，不用 sudo）、
       uninstall.sh、internal/version、.gitignore
@@ -163,4 +168,4 @@ tasks:
       harness 的 check 比對範本檔、檔案、Makefile、CHANGELOG，也檢查 git 沒有追蹤 Claude Code 的檔（tgo 的 tdptest 不再查 repo）
       還沒發過版（git 沒有 tag）：Homebrew 與安裝腳本要等第一次發版才裝得到
     test:
-      - commit: 21bb7b3
+      - check: repo
