@@ -163,4 +163,4 @@ tasks:
       harness 的 check 比對範本檔、檔案、Makefile、CHANGELOG，也檢查 git 沒有追蹤 Claude Code 的檔（tgo 的 tdptest 不再查 repo）
       還沒發過版（git 沒有 tag）：Homebrew 與安裝腳本要等第一次發版才裝得到
     test:
-      - commit: 4837fbb
+      - commit: 21bb7b3
