@@ -1,11 +1,11 @@
-id: 10
-from: v1.1.0-beta.3
-to: v1.1.0
+id: 11
+from: v1.1.0
+to: v1.2.0-beta.1
 tasks:
   - id: 1
     spec: 2
     request: '三個畫面，一個畫面一課：[M]ove 看與移動、[A]ctions 找動作、[P]opups popup 疊 popup；按 M、A、P 換畫面，啟動時打開 [M]ove'
-    tdp: [tdp terms.2, tdp screen.1, tdp screen.3, tdp screen.4, tdp screen.5, tdp screen.8, tdp panel.5, tdp P5, tdp M4, tdp M5, tdp K12, tdp L1, tdp L4, tdp E5]
+    tdp: [tdp terms.2, tdp screen.1, tdp screen.3, tdp screen.4, tdp screen.5, tdp screen.8, tdp panel.5, tdp P5, tdp P3, tdp M4, tdp M5, tdp K12, tdp L1, tdp L4, tdp E5]
     remark:
       - '畫面 chip 列上三個畫面；M、A、P 是領域熱鍵（tdp P5），不佔移動的字母（tdp K12）'
       - '一個畫面練一部分操作，三個畫面共用同一個書架（README 的特色）'
@@ -24,12 +24,14 @@ tasks:
     remark:
       - '兩個 panel：書架的清單、那個書架的書；書那個 panel 有 tab，其中一個是 Authors'
   - id: 4
-    spec: 2
+    spec: 11
     request: 'Enter 做最直觀的那件事：打開那本書的第一頁；在作者上打開那個作者'
     tdp: [tdp K3, tdp P5, tdp M6, tdp panel.13, tdp note.1, tdp note.2, tdp note.3, tdp note.7, tdp components.3, tdp T1]
     remark:
       - 'Enter 的動作是 app 自己定的（tdp P5、tdp K3）：同一種項目在三個畫面都是打開第一頁'
-      - '第一頁與作者是唯讀內容，用 viewer（tdp note）'
+      - '第一頁與作者是唯讀內容，用 viewer（tdp note）；viewer 一律折行（tdp note.2）'
+      - note: 'viewer 的搜尋（tdp note.3、note.2 寫「有 `/` 時」）：沒寫哪些 viewer 要有 `/`，也沒寫 app 可以自行決定；清單 note-86 的「適用」寫 viewer，檢查方式又寫「在有 `/` 的 viewer」。第一頁與作者兩個 viewer 暫時不加 `/`（tgo Viewer.Search 不設）'
+        issue: 'SendMessage 給 terminu，2026-11-03'
   - id: 5
     spec: 1
     request: '在一頁文字上：按 v、移到起點，再按 v、移動選取；y 複製'
@@ -37,28 +39,29 @@ tasks:
   - id: 6
     spec: 1
     request: '[A]ctions：Space 看這裡能做什麼（對這一項、對這個 panel、對整個 app），? 看這裡能按的每一個鍵'
-    tdp: [tdp K5, tdp K6, tdp M2, tdp M3, tdp M4, tdp M5, tdp M6, tdp menu, tdp note.5]
+    tdp: [tdp K5, tdp K6, tdp P3, tdp M2, tdp M3, tdp M4, tdp M5, tdp M6, tdp menu, tdp note.5]
     remark:
       - '書的動作 open、begin、finish、sort 都在 Space menu 找得到，熱鍵用 [] 標出（tdp M3、tdp M5）'
   - id: 7
     spec: 1
     request: '[A]ctions 上按 b 開始讀（移到 Reading）、按 f 讀完（移到 Done）'
-    tdp: [tdp P5, tdp M3, tdp M5, tdp M6, tdp M7, tdp K12, tdp note.7, tdp toast.2]
+    tdp: [tdp P5, tdp M3, tdp M5, tdp M6, tdp M7, tdp K12, tdp note.7, tdp toast.2, tdp T1]
     remark:
       - 'b、f 是領域熱鍵（tdp P5），在 Space menu 裡是 begin、finish'
   - id: 8
     spec: 1
     request: '[A]ctions 上按 s 按年份排，再按一次回到按書名'
-    tdp: [tdp P5, tdp M5, tdp panel.6, tdp note.7, tdp toast.2]
+    tdp: [tdp P5, tdp P3, tdp M3, tdp M5, tdp K12, tdp panel.6, tdp note.7, tdp toast.2, tdp T1]
     remark:
       - 's 是領域熱鍵（tdp P5），在 Space menu 裡是 sort'
   - id: 9
-    spec: 3
+    spec: 11
     request: '! 打開 App Log：做過的事，最新的在最下面；在這裡是換過的畫面、打開過的第一頁與作者，以及搬、拿掉、加進來、排序過的書'
-    tdp: [tdp K1, tdp K3, tdp F5, tdp M1, tdp P3, tdp note.7, tdp toast.2, tdp panel.13]
+    tdp: [tdp K1, tdp K3, tdp K11, tdp F5, tdp M1, tdp P3, tdp note.7, tdp toast.2, tdp panel.13]
     remark:
       - '記什麼照 tdp note.7：tdp P3 的三種 operation 都記，只看不改的也記（打開第一頁、作者）；換畫面由 lib 記'
       - '不記的（tdp note.7）：移動 cursor（j|k 換書架，明細跟著換）、換 focus（[1] SHELVES 上的 Enter 只把 focus 移到 [2]）、Space menu、?、!、在 confirm 或表單按 Esc 取消的動作'
+      - '進出 viewer 的 v 選取模式（tdp K11 的模式）不記（tdp note.7：進出模式不記）；在模式裡 y 複製，照它的結果記（tgo 的 Success toast）'
       - '打開與排序記 Info，改到書架的記 Success（tdp toast.2：做完的事用哪一種，app 可以自行決定）'
       - '[1] SHELVES 上用 Enter（menu 的 Books）進明細（tdp panel.13）是換 focus（tdp K3），不記（tdp note.7）'
   - id: 10
@@ -85,13 +88,13 @@ tasks:
     remark:
       - '最低尺寸 60×24：tdp L1 放行 app 調低（不能高於 60×32）。寬用標準的 60；高沿用 24：新開的終端機常是 80×24（user 定最低尺寸 80×24 時的理由），demou 的版面在 60×24 畫得下'
   - id: 14
-    spec: 1
+    spec: 11
     request: 'demou version 印出版號（-v、--version），demou help 印出命令列的用法（-h、--help）'
-    tdp: [tdp E1, tdp project.4, tdp project/version.go]
+    tdp: [tdp E1, harness project.4, harness project/version.go]
   - id: 15
-    spec: 1
+    spec: 11
     request: 'demou 的 mark：docs/icon.svg'
-    tdp: [tdp S1, tdp S2, tdp S3, tdp S4, tdp S5, tdp E6, tdp project.4]
+    tdp: [tdp S1, tdp S2, tdp S3, tdp S4, tdp S5, tdp E6, harness project.3, harness project.4]
     remark:
       - 'splash 畫 demou 的 mark；README 不寫 splash（tdp S2）'
   - id: 16
@@ -99,12 +102,15 @@ tasks:
     request: '啟動時量 icon 與 powerline 符號佔幾格，量錯時用 DEMOU__、TERMINU__、LC_TERMINU_ 的環境變數設'
     tdp: [tdp E2, tdp E5, tdp E8]
   - id: 17
-    spec: 10
+    spec: 11
     request: '用 Homebrew、安裝腳本（裝到 ~/.local/bin，不用 sudo）或 go install 裝，用 brew 或移除腳本移除；只有 macOS 與 Linux，要 Nerd Font 與 truecolor'
-    tdp: [tdp E4, tdp E6, tdp E7, tdp L1, tdp project.2, tdp project.3, tdp project.7, tdp project/family.mk, tdp project/release.yml, tdp project/goreleaser.yaml, tdp project/install.sh, tdp project/uninstall.sh, tdp project/version.go, tdp project/gitignore]
+    tdp: [tdp E4, tdp E6, tdp E7, tdp L1, harness project.2, harness project.3, harness project.4, harness project.5, harness project.6, harness project.7, harness project/family.mk, harness project/release.yml, harness project/goreleaser.yaml, harness project/install.sh, harness project/uninstall.sh, harness project/version.go, harness project/gitignore]
     remark:
-      - '只出 linux、darwin：goreleaser 範本的 Windows 那幾行不打開（tdp project.2）'
-      - 'Claude Code 的檔不進 git：.gitignore 照範本排除 CLAUDE.md 與 .claude/ 底下的檔，只留 harness 的 .claude/rules/terminu.md（tdp project.3）'
+      - '只出 linux、darwin：goreleaser 範本的 Windows 那幾行不打開（harness project.2）'
+      - 'Claude Code 的檔不進 git：.gitignore 照範本排除 CLAUDE.md 與 .claude/ 底下的檔，只留 harness 的 .claude/rules/terminu.md（harness project.3）'
       - 'README 的 terminu family 段附 tdp、terminu-go、terminu-harness 的連結，不列家族成員（tdp E7）'
-      - 'beta（tag vX.Y.Z-beta.N）發成 GitHub 的 pre-release，不推 Homebrew tap；release notes 寫在 checkout 外面（tdp project.7）'
-      - 'module 路徑是 github.com/vulcanshen/demou：還沒發到 v2，不帶 /vN（tdp project.3）；goreleaser 的 ldflags 從 go.mod 取 module 路徑'
+      - 'beta（tag vX.Y.Z-beta.N）發成 GitHub 的 pre-release，不推 Homebrew tap；release notes 寫在 checkout 外面（harness project.7）'
+      - 'module 路徑是 github.com/vulcanshen/demou：還沒發到 v2，不帶 /vN（harness project.3）；goreleaser 的 ldflags 從 go.mod 取 module 路徑'
+      - '家族成員的 repo 照 terminu-harness 的範本（tdp E6）：範本檔、檔案、Makefile、CHANGELOG 由 harness 的 check 比對，tdp v1.2.0-beta.1 起 tgo 的 tdptest 不查 repo'
+      - note: 'repo 的檢查從 tdptest（TestTDP/repo）搬到 harness 的 check 以後，work.yaml 的作保（測試名字、user、commit）沒有一種寫得出「harness 的 check」；暫時寫做這件事的 commit'
+        issue: 'SendMessage 給 terminu，2026-11-03'

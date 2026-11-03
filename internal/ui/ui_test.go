@@ -305,6 +305,31 @@ func TestActionsSort(t *testing.T) {
 	}
 }
 
+// begin, finish and sort open nothing more: run from the Space menu, they
+// close it (tdp T1, menu.3).
+func TestActionsFromTheMenu(t *testing.T) {
+	t.Parallel()
+	hs := newHarness(t, 80, 40)
+	hs.keys("A", "Space")
+	hs.contains("ITEM OPERATION", "PANEL OPERATION")
+	hs.keys("b")
+	hs.lacks("ITEM OPERATION")
+	two := hs.d.book("two-cities")
+	if two.shelf != reading {
+		t.Fatalf("begin from the menu left it on %s", two.shelf)
+	}
+	hs.keys("Space", "f")
+	hs.lacks("ITEM OPERATION")
+	if two.shelf != done {
+		t.Fatalf("finish from the menu left it on %s", two.shelf)
+	}
+	hs.keys("Space", "s", "gg")
+	hs.lacks("PANEL OPERATION")
+	if r, _ := hs.d.actions.list.Current(); r.ID != "pride" {
+		t.Fatalf("sort from the menu: the first book is %s", r.ID)
+	}
+}
+
 func TestPopupsRemoveAsksFirst(t *testing.T) {
 	t.Parallel()
 	hs := newHarness(t, 80, 40)

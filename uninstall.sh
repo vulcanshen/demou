@@ -2,7 +2,7 @@
 # demou uninstaller for macOS / Linux.
 # Usage: curl -fsSL https://raw.githubusercontent.com/vulcanshen/demou/main/uninstall.sh | sh
 #
-# terminu family template (tdp project/uninstall.sh). Replace demou; the
+# terminu family template (harness project/uninstall.sh). Replace demou; the
 # blocks marked "app's own" are the app's, the rest stays as it is.
 
 set -e
