@@ -1,5 +1,5 @@
-id: 13
-from: v1.2.0-beta.2
+id: 14
+from: v1.2.0
 to: v1.2.0
 tasks:
   - id: 1
@@ -104,8 +104,8 @@ tasks:
     request: '啟動時量 icon 與 powerline 符號佔幾格，量錯時用 DEMOU__、TERMINU__、LC_TERMINU_ 的環境變數設'
     tdp: [tdp E2, tdp E5, tdp E8]
   - id: 17
-    spec: 12
-    request: '用 Homebrew、安裝腳本（裝到 ~/.local/bin，不用 sudo）或 go install 裝，用 brew 或移除腳本移除；只有 macOS 與 Linux，要 Nerd Font 與 truecolor'
+    spec: 14
+    request: '用 Homebrew 或安裝腳本（裝到 ~/.local/bin，不用 sudo）裝，用 brew 或移除腳本移除；只有 macOS 與 Linux，要 Nerd Font 與 truecolor'
     tdp: [tdp E4, tdp E6, tdp E7, tdp L1, harness project.2, harness project.3, harness project.4, harness project.5, harness project.6, harness project.7, harness project/family.mk, harness project/release.yml, harness project/goreleaser.yaml, harness project/install.sh, harness project/uninstall.sh, harness project/version.go, harness project/gitignore]
     remark:
       - '只出 linux、darwin：goreleaser 範本的 Windows 那幾行不打開（harness project.2）'
@@ -115,3 +115,4 @@ tasks:
       - 'module 路徑是 github.com/vulcanshen/demou：還沒發到 v2，不帶 /vN（harness project.3）；goreleaser 的 ldflags 從 go.mod 取 module 路徑'
       - '家族成員的 repo 照 terminu-harness 的範本（tdp E6）：範本檔、檔案、Makefile、CHANGELOG 由 harness 的 check 比對，tdp v1.2.0-beta.1 起 tgo 的 tdptest 不查 repo'
       - 'work.yaml 的作保寫 check: repo（harness v1.2.0-beta.3 加的，回答了 2026-11-03 送給 terminu 的 DM44；之前暫時寫做這件事的 commit 21bb7b3）'
+      - '不提供 go install（idea.md，user 2026-11-04，回答 DM48；harness project.7，v1.2.1 起）：README 只寫 Homebrew 與安裝腳本；beta 從 GitHub 的 pre-release 下載；version.go 照範本不改'

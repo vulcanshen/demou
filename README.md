@@ -61,12 +61,6 @@ curl -fsSL https://raw.githubusercontent.com/vulcanshen/demou/main/install.sh | 
 
 No sudo: it installs to `~/.local/bin`.
 
-### Go
-
-```sh
-go install github.com/vulcanshen/demou/cmd/demou@latest
-```
-
 ### The first start
 
 demou opens on the `[M]ove` screen with the bookshelf. It writes nothing anywhere: quit and start again, and the shelf is

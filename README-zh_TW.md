@@ -56,12 +56,6 @@ curl -fsSL https://raw.githubusercontent.com/vulcanshen/demou/main/install.sh | 
 
 不用 sudo：裝到 `~/.local/bin`。
 
-### Go
-
-```sh
-go install github.com/vulcanshen/demou/cmd/demou@latest
-```
-
 ### 第一次啟動
 
 demou 打開 `[M]ove` 畫面與書架。它不寫任何東西：離開再打開，書架回到原來的樣子。

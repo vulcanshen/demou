@@ -155,17 +155,17 @@ tasks:
       測試量整個畫面，包括比畫面大的 popup，icon 與 powerline 符號各跑 1/1、2/1、2/2 格三次：E5 要的「icon 兩格、powerline 一格」與「兩種都兩格」都有
     test: [TestE5PopupBiggerThanTheScreen, TestTDP]
   - id: 17
-    spec: 12
+    spec: 14
     implementation: |
       照 terminu-harness 的 project 範本（範本檔開頭的註解寫 harness project/…）：family.mk、.github/workflows/release.yml、.goreleaser.yaml（只出 linux、darwin）、install.sh（裝到 ~/.local/bin，不用 sudo）、
       uninstall.sh、internal/version、.gitignore
-      Homebrew 走 vulcanshen/tap；go install github.com/vulcanshen/demou/cmd/demou@latest
+      Homebrew 走 vulcanshen/tap；不提供 go install，README 的安裝只有 Homebrew 與安裝腳本
       module 是 github.com/vulcanshen/demou（v1，不帶 /vN）；.goreleaser.yaml 的 ldflags 寫 -X {{ .ModulePath }}/internal/version.Version={{.Version}}
       .goreleaser.yaml 的 release.prerelease: auto、tap 的 skip_upload: auto：beta 的 tag 發成 pre-release，不進 tap
       release.yml 把 CHANGELOG 那一段寫到 $RUNNER_TEMP/RELEASE_NOTES.md，goreleaser 不帶 --skip=validate
       README 寫 Nerd Font、truecolor、60×24 的需求；terminu family 段只附 tdp、terminu-go、terminu-harness 的連結
       .gitignore 照範本排除 CLAUDE.md 與 .claude/ 底下的檔，只留 .claude/rules/terminu.md；git 不追蹤 CLAUDE.md，本機的檔照留
       harness 的 check 比對範本檔、檔案、Makefile、CHANGELOG，也檢查 git 沒有追蹤 Claude Code 的檔（tgo 的 tdptest 不再查 repo）
-      還沒發過版（git 沒有 tag）：Homebrew 與安裝腳本要等第一次發版才裝得到
+      只發過 beta（v1.0.0-beta.1，GitHub 的 pre-release）：Homebrew 與安裝腳本要等正式版 v1.0.0 才裝得到
     test:
       - check: repo

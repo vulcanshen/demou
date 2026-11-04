@@ -2,6 +2,10 @@
 
 Each release names the version of terminu design (tdp) it follows.
 
+## Unreleased
+
+- The README no longer offers `go install`: demou installs with Homebrew or the install script
+
 ## v1.0.0-beta.1 — tdp v1.2.0
 
 - Built on terminu-go v1.2.0, following tdp v1.2.0

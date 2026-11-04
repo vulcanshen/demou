@@ -16,6 +16,9 @@
 
 macOS 與 Linux（WSL 也可以），沒有 Windows 版。終端機要有 Nerd Font、truecolor，至少 60 欄寬、24 列高。
 
+用 Homebrew 或安裝腳本裝。家族不再提供 go install（user 2026-11-04，由 terminu 轉達，回答 DM48：go install 裝的發布版 `demou version`
+印 dev）。
+
 ## 哪些事不能發生
 
 - 不存任何東西：書是練習用的假資料，只在 demou 開著時存在；加的、搬的、拿掉的書，離開就不見了。每次啟動都是同一個放著
