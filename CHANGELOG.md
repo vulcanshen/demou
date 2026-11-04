@@ -2,9 +2,29 @@
 
 Each release names the version of terminu design (tdp) it follows.
 
-## Unreleased
+## v1.0.0 — tdp v1.2.0
 
-- The README no longer offers `go install`: demou installs with Homebrew or the install script
+The first stable release: what v1.0.0-beta.1 had, and what came after it.
+
+- Built on terminu-go v1.2.0, following tdp v1.2.0
+- Three screens over one bookshelf of twenty classics: `[M]ove` (shelves and their books, with an Authors tab), `[A]ctions`
+  (open, begin, finish, sort) and `[P]opups` (remove, after asking; the NEW BOOK form with a select over it); `q` asks
+  first
+- On a first page or an author, `v` selects and `y` copies to the terminal's clipboard
+- `/` finds a word on a first page, an author, the App Log and `?`, and `n|N` go from one to the next; a word that is
+  not there says so
+- `!` opens the App Log: the screens switched to, the pages and authors opened, the books moved, removed, added and
+  sorted, newest last
+- Needs a terminal of at least 60×24; a smaller one shows demou's name, the size it needs and how to quit
+- demou's mark, `docs/icon.svg`
+- `demou version` and `demou help`
+- Installs with Homebrew or the install script; the family does not offer `go install` (since v1.0.0-beta.1)
+- The repo, from the terminu-harness v1.2.1 templates (`family.mk`, the release workflow, goreleaser, `install.sh`,
+  `uninstall.sh`, `internal/version`, `.gitignore`), whose first comment names `harness project/…`: a beta tag
+  (`vX.Y.Z-beta.N`) makes a GitHub pre-release that the Homebrew tap does not get, the release notes are written
+  outside the checkout, and the ldflags that stamp the version take the module path from `go.mod`
+- Claude Code's files stay out of git, but for harness's `.claude/rules/terminu.md`
+- The README's terminu family section links tdp, terminu-go and terminu-harness
 
 ## v1.0.0-beta.1 — tdp v1.2.0
 
