@@ -4,7 +4,7 @@ go 1.26.0
 
 require (
 	github.com/charmbracelet/bubbletea v1.3.10
-	github.com/vulcanshen/terminu-go v1.2.0-beta.2
+	github.com/vulcanshen/terminu-go v1.2.0
 )
 
 require (
